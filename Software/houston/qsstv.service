@@ -1,0 +1,8 @@
+[Unit]
+Description=Runs a qsstv instance as houston with houston's config
+
+[Service]
+ExecStart=sudo su -l houston -c "/opt/radio/lewis-crawler/Software/houston/sstv.sh"
+
+[Install]
+WantedBy=multi-user.target

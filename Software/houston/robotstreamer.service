@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs the robotstreamer stream
+
+[Service]
+ExecStart=sudo su -l houston -c "/opt/radio/lewis-crawler/Software/houston/stream.sh"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
