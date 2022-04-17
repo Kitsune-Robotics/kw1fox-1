@@ -16,9 +16,11 @@ class Streamer:
         # This is the root of the screen
         self.root = self.dsp.screen().root
 
-        # ffmpeg command
+        # This holds the logs shown by the LogBox
+        self.streamLog = ["Stream just started!", "Welcome!"]
+        self.lastLog = int(time.time())
 
-        # ffmpeg  --stream_loop -1 -re -i ~/INPUT_FILE -vcodec libx264 -profile:v main -preset:v medium -r 20 -g 60 -keyint_min 60 -sc_threshold 0 -b:v 2500k -maxrate 2500k -bufsize 2500k  -sws_flags lanczos+accurate_rnd -acodec aac -b:a 96k -ar 48000 -ac 2 -f flv rtmp://rtmp.robotstreamer.com/live/123?key=123"
+        # ffmpeg
         cmd_out = [
             "ffmpeg",
             "-f",
@@ -72,7 +74,8 @@ class Streamer:
         self.pipe = sp.Popen(cmd_out, stdin=sp.PIPE)
 
         # Graphics and resources
-        self.font = ImageFont.truetype(r"../../Resources/RadioFont.ttf", 20)
+        self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
+        self.font = ImageFont.truetype(r"../../Resources/RadioFont.ttf", self.fontSize)
 
     def getFrame(self):
         """
@@ -99,19 +102,57 @@ class Streamer:
 
         return sstvImage, waveformImage
 
+    def addLog(self, newLog):
+        self.streamLog.append(newLog)
+        self.lastLog = int(time.time())
+
+        if len(self.streamLog) > 10:
+            self.streamLog.pop()
+
+    def getLogBox(self):
+        logboxWidth = 1000
+        logboxHeight = len(self.streamLog) * self.fontSize + 20
+
+        # Create a new logbox image
+        logBox = Image.new(mode="RGBA", size=(logboxWidth, logboxHeight))
+
+        # Draw on the logbox
+        draw = ImageDraw.Draw(logBox)
+
+        # Black background
+        draw.rectangle([(0, 0), logBox.size], fill=(200, 200, 200))
+
+        # Log text
+        for log_index in range(len(self.streamLog)):
+            draw.text(
+                (0, log_index * self.fontSize),
+                self.streamLog[log_index],
+                font=self.font,
+                align="left",
+                fill=(255, 0, 0, 255),
+            )
+
+        drawLog = int(time.time()) - self.lastLog < 20
+
+        return drawLog, logBox
+
     def drawGraphics(self, image):
         """
         Draws graphics and sprites over
         a frame
         """
+        streamWidth, streamHeight = 1280, 720
 
-        frame = Image.new(mode="RGB", size=(1280, 720))
+        frame = Image.new(mode="RGB", size=(streamWidth, streamHeight))
 
-        # Scale and paste
-        scaledSSTV = image[0].resize((960, 720), Image.ANTIALIAS)
+        # Scale and paste the SSTV image
+        scaledSSTV = image[0].resize((960, streamHeight), Image.LANCZOS)
         frame.paste(scaledSSTV)
 
-        scaledWaveform = image[1].resize((1280 - 720, self.scrHeight), Image.ANTIALIAS)
+        # Scale and paste the waveform image
+        scaledWaveform = image[1].resize(
+            (streamWidth - 720, self.scrHeight), Image.LANCZOS
+        )
         frame.paste(scaledWaveform, (self.scrWidth - 65, 0))
 
         # Populate text, normally this should poll or use shared vars!
@@ -139,7 +180,19 @@ NOMETA
 
         # Draw text
         draw = ImageDraw.Draw(frame)
-        draw.text((970, 200), info, font=self.font, align="left", fill=(255, 0, 0, 255))
+        draw.text(
+            (970, 200),
+            info,
+            font=self.font,
+            align="left",
+            fill=(255, 0, 0, 255),
+        )
+
+        # Scale and paste the alerts/log window
+        drawLogbox, scaledLogbox = self.getLogBox()
+        if drawLogbox:
+            logboxCenter = int(streamWidth / 2) - int(scaledLogbox.size[0] / 2)
+            frame.paste(scaledLogbox, (logboxCenter, 200))
 
         return frame
 
@@ -163,8 +216,8 @@ NOMETA
 if __name__ == "__main__":
     myStreamer = Streamer()
 
-    # myStreamer.drawGraphics(Image.open("../../Resources/KW1FOX-1_320x240.png")).show()
     myStreamer.stream()
 
     # imgs = myStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
+    # myStreamer.getLogs().show()
     # myStreamer.drawGraphics(imgs).show()
