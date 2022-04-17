@@ -6,3 +6,4 @@ install:
 	sudo systemctl daemon-reload
 	sudo systemctl enable qsstv.service
 	sudo systemctl enable robotstreamer.service
+	sudo cp qsstv_9.0.conf /home/houston/.config/ON4QZ/qsstv_9.0.conf
