@@ -1,8 +1,10 @@
 import os
 import time
+import json
 import logging
 import subprocess as sp
 
+from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
 
@@ -11,6 +13,9 @@ class Streamer:
     def __init__(self):
         # Display settings
         self.scrWidth, self.scrHeight = 1024, 768
+
+        # Stream/graphics
+        self.streamWidth, self.streamHeight = 1280, 720
 
         # Logging
         logging.basicConfig(level=logging.DEBUG)
@@ -26,6 +31,13 @@ class Streamer:
         self.lastLog = int(time.time())
 
         # ffmpeg
+        videoHost = ""
+        videoPort = ""
+        stream_key = os.environ.get("STREAMKEY")
+
+
+        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{stream_key}/{self.streamHeight}/{self.streamWidth}/"
+
         cmd_out = [
             "ffmpeg",
             "-f",
@@ -76,7 +88,7 @@ class Streamer:
         ]
 
         # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(cmd_out, stdin=sp.PIPE)
+        self.pipe = sp.Popen(cmd_out, stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
@@ -148,17 +160,16 @@ class Streamer:
         Draws graphics and sprites over
         a frame
         """
-        streamWidth, streamHeight = 1280, 720
 
-        frame = Image.new(mode="RGB", size=(streamWidth, streamHeight))
+        frame = Image.new(mode="RGB", size=(self.streamWidth, self.streamHeight))
 
         # Scale and paste the SSTV image
-        scaledSSTV = image[0].resize((960, streamHeight), Image.LANCZOS)
+        scaledSSTV = image[0].resize((960, self.streamHeight), Image.LANCZOS)
         frame.paste(scaledSSTV)
 
         # Scale and paste the waveform image
         scaledWaveform = image[1].resize(
-            (streamWidth - 720, self.scrHeight), Image.LANCZOS
+            (self.streamWidth - 720, self.scrHeight), Image.LANCZOS
         )
         frame.paste(scaledWaveform, (self.scrWidth - 65, 0))
 
@@ -198,10 +209,22 @@ NOMETA
         # Scale and paste the alerts/log window
         drawLogbox, scaledLogbox = self.getLogBox()
         if drawLogbox:
-            logboxCenter = int(streamWidth / 2) - int(scaledLogbox.size[0] / 2)
+            logboxCenter = int(self.streamWidth / 2) - int(scaledLogbox.size[0] / 2)
             frame.paste(scaledLogbox, (logboxCenter, 200))
 
         return frame
+
+    def getVideoEndpoint():
+        """
+        This idea comes from the RS github, api object can return some information about
+        their mjpeg servers.
+        """
+
+        apiServer = "https://api.robotstreamer.com"
+
+        url = f"{apiServer}/v1/get_endpoint/jsmpeg_video_capture/{0}"
+        response = robot_util.getWithRetry(url)
+        return json.loads(response)
 
     def stream(self):
         """
