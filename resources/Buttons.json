@@ -1,0 +1,51 @@
+[
+    {
+        "label": "Robot Controls",
+        "button_panels": [
+            {
+                "label": "SSTV Controls",
+                "buttons": [
+                    {
+                        "label": "BW (robot)",
+                        "price": 0,
+                        "command": "B"
+                    },
+                    {
+                        "label": "Color (robot)",
+                        "price": 10,
+                        "command": "C"
+                    }
+                ]
+            },
+            {
+                "label": "Movement Controls (vote based)",
+                "buttons": [
+                    {
+                        "label": "left",
+                        "price": 0,
+                        "command": "L",
+                        "keycode": 37
+                    },
+                    {
+                        "label": "right",
+                        "price": 0,
+                        "command": "R",
+                        "keycode": 39
+                    },
+                    {
+                        "label": "forward",
+                        "price": 0,
+                        "command": "F",
+                        "keycode": 38
+                    },
+                    {
+                        "label": "back",
+                        "price": 0,
+                        "command": "B",
+                        "keycode": 40
+                    }
+                ]
+            }
+        ]
+    }
+]
