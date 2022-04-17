@@ -7,6 +7,7 @@ import subprocess as sp
 from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
+from utils import rsUtils
 
 
 class Streamer:
@@ -29,6 +30,10 @@ class Streamer:
         # This holds the logs shown by the LogBox
         self.streamLog = ["Stream just started!", "Welcome!"]
         self.lastLog = int(time.time())
+
+        # Api data
+        #endpointData = self.getVideoEndpoint()
+        #print(endpointData)
 
         # ffmpeg
         videoHost = ""
@@ -92,7 +97,7 @@ class Streamer:
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
-        self.font = ImageFont.truetype(r"../../Resources/RadioFont.ttf", self.fontSize)
+        self.font = ImageFont.truetype(r"../resources/RadioFont.ttf", self.fontSize)
 
         self.deleteme = int(time.time())
 
@@ -214,7 +219,7 @@ NOMETA
 
         return frame
 
-    def getVideoEndpoint():
+    def getVideoEndpoint(self):
         """
         This idea comes from the RS github, api object can return some information about
         their mjpeg servers.
