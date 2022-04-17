@@ -3,11 +3,12 @@ import time
 import json
 import logging
 import subprocess as sp
+import utils.rsUtils as rsutil
+import utils.robot_utils as robot_util
 
 from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
-from utils import rsUtils
 
 
 class Streamer:
@@ -32,68 +33,19 @@ class Streamer:
         self.lastLog = int(time.time())
 
         # Api data
-        #endpointData = self.getVideoEndpoint()
-        #print(endpointData)
+        self.camera_id = 5505
+        self.api_server = "http://api.robotstreamer.com:8080"
+        endpointData = rsutil.getVideoEndpoint(self.api_server, self.camera_id)
 
         # ffmpeg
-        videoHost = ""
-        videoPort = ""
-        stream_key = os.environ.get("STREAMKEY")
+        videoHost = endpointData["host"]
+        videoPort = endpointData["port"]
+        self.stream_key = os.environ.get("STREAMKEY")
 
-
-        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{stream_key}/{self.streamHeight}/{self.streamWidth}/"
-
-        cmd_out = [
-            "ffmpeg",
-            "-f",
-            "image2pipe",
-            "-vcodec",
-            "png",
-            "-r",
-            "5",  # FPS
-            "-i",
-            "-",  # Indicated input comes from pipe
-            "-vcodec",
-            "libx264",
-            "-profile:v",
-            "main",
-            "-pix_fmt",
-            "yuv420p",
-            "-preset:v",
-            "medium",
-            "-r",
-            "30",
-            "-g",
-            "10",
-            "-keyint_min",
-            "60",
-            "-sc_threshold",
-            "0",
-            "-b:v",
-            "2500k",
-            "-maxrate",
-            "2500k",
-            "-bufsize",
-            "2500k",
-            "-sws_flags",
-            "lanczos+accurate_rnd",
-            "-acodec",
-            "aac",
-            "-b:a",
-            "96k",
-            "-r",
-            "15",
-            "-ar",
-            "48000",
-            "-ac",
-            "2",
-            "-f",
-            "flv",
-            os.environ.get('STREAMURL'),
-        ]
+        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamHeight}/{self.streamWidth}/"
 
         # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(cmd_out, stdin=PIPE, stdout=DEVNULL, stderr=STDOUT)
+        self.pipe = sp.Popen(ffmpegSettings.split(), stdin=PIPE, stderr=STDOUT)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
@@ -219,32 +171,27 @@ NOMETA
 
         return frame
 
-    def getVideoEndpoint(self):
-        """
-        This idea comes from the RS github, api object can return some information about
-        their mjpeg servers.
-        """
-
-        apiServer = "https://api.robotstreamer.com"
-
-        url = f"{apiServer}/v1/get_endpoint/jsmpeg_video_capture/{0}"
-        response = robot_util.getWithRetry(url)
-        return json.loads(response)
-
     def stream(self):
         """
         Actually streams!
         """
 
         while True:
+            # Draw a frame into the ffmpeg pipe
             self.drawGraphics(self.cropFrame(self.getFrame())).save(
                 self.pipe.stdin, "PNG"
             )
 
             # Junk, delete me lol
-            if int(time.time()) - self.deleteme > 120:
+            if int(time.time()) - self.deleteme > 10:
+                """
+                First off this should be a async scheduled function
+                secondly, robot_util prints to stio witch is really annoying and dosent use logging!
+                """
                 self.deleteme = int(time.time())
-                self.addLog(f"The current time is now {int(time.time())}")
+                
+                # Send camera alive
+                robot_util.sendCameraAliveMessage(self.api_server, self.camera_id, self.stream_key)
 
     def __del__(self):
         self.dsp.close()
