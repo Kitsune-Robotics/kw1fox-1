@@ -39,7 +39,7 @@ class Streamer:
             "-r",
             "30",
             "-g",
-            "60",
+            "10",
             "-keyint_min",
             "60",
             "-sc_threshold",
