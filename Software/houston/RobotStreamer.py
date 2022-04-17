@@ -1,4 +1,6 @@
+import os
 import time
+import logging
 import subprocess as sp
 
 from Xlib import display, X
@@ -9,6 +11,9 @@ class Streamer:
     def __init__(self):
         # Display settings
         self.scrWidth, self.scrHeight = 1024, 768
+
+        # Logging
+        logging.basicConfig(level=logging.DEBUG)
 
         # Create display
         self.dsp = display.Display(":0")
@@ -50,9 +55,9 @@ class Streamer:
             "-b:v",
             "2500k",
             "-maxrate",
-            "1500k",
+            "2500k",
             "-bufsize",
-            "1500k",
+            "2500k",
             "-sws_flags",
             "lanczos+accurate_rnd",
             "-acodec",
@@ -60,14 +65,14 @@ class Streamer:
             "-b:a",
             "96k",
             "-r",
-            "6",
+            "15",
             "-ar",
             "48000",
             "-ac",
             "2",
             "-f",
             "flv",
-            "rtmp://rtmp.robotstreamer.com/live/topkek",
+            os.environ.get('STREAMURL'),
         ]
 
         # This is the ffmpeg pipe streamer!
@@ -76,6 +81,8 @@ class Streamer:
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
         self.font = ImageFont.truetype(r"../../Resources/RadioFont.ttf", self.fontSize)
+
+        self.deleteme = int(time.time())
 
     def getFrame(self):
         """
@@ -106,8 +113,8 @@ class Streamer:
         self.streamLog.append(newLog)
         self.lastLog = int(time.time())
 
-        if len(self.streamLog) > 10:
-            self.streamLog.pop()
+        if len(self.streamLog) > 12:
+            self.streamLog.pop(0)
 
     def getLogBox(self):
         logboxWidth = 1000
@@ -170,7 +177,7 @@ Last comm: N/A
 KW1FOX-3
 Offline.
 Volt: N/A
-Last comm: N/A
+Last comm: {self.lastLog}
 
 Currently Showing:
 KW1FOX-1
@@ -205,6 +212,11 @@ NOMETA
             self.drawGraphics(self.cropFrame(self.getFrame())).save(
                 self.pipe.stdin, "PNG"
             )
+
+            # Junk, delete me lol
+            if int(time.time()) - self.deleteme > 120:
+                self.deleteme = int(time.time())
+                self.addLog(f"The current time is now {int(time.time())}")
 
     def __del__(self):
         self.dsp.close()

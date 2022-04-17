@@ -1,5 +1,5 @@
 #!/bin/bash
 
 # Runs the robotstream
-cd /opt/radio/lewis-crawler/Software/houston/ && pipenv run python RobotStreamer.py
+cd /opt/radio/lewis-crawler/Software/houston/ && STREAMURL="URLHERE" pipenv run python RobotStreamer.py
 
