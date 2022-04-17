@@ -2,12 +2,13 @@ import time
 import subprocess as sp
 
 from Xlib import display, X
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageChops
 
 
 class Streamer:
     def __init__(self):
-        self.x1, self.y1 = 580, 620
+        # Display settings
+        self.scrWidth, self.scrHeight = 1024, 768
 
         # Create display
         self.dsp = display.Display(":0")
@@ -75,17 +76,30 @@ class Streamer:
 
     def getFrame(self):
         """
-        Returns a single cropped sstv video frame
+        Returns a single full frame from the xorg display server.
         """
 
-        raw = self.root.get_image(0, 0, self.x1, self.y1, X.ZPixmap, 0xFFFFFFFF)
-        image = Image.frombytes("RGB", (self.x1, self.y1), raw.data, "raw", "BGRX")
-
-        image = image.crop((0, 182, self.x1, self.y1))
+        raw = self.root.get_image(
+            0, 0, self.scrWidth, self.scrHeight, X.ZPixmap, 0xFFFFFFFF
+        )
+        image = Image.frombytes(
+            "RGB", (self.scrWidth, self.scrHeight), raw.data, "raw", "BGRX"
+        )
 
         return image
 
-    def drawGraphics(self, image: Image):
+    def cropFrame(self, image: Image):
+        """
+        Crops the full frame image into a waveform and an image display
+        """
+
+        sstvImage = image.crop((0, 182, 580, 620))
+
+        waveformImage = image.crop((865, 30, self.scrWidth - 2, self.scrHeight - 74))
+
+        return sstvImage, waveformImage
+
+    def drawGraphics(self, image):
         """
         Draws graphics and sprites over
         a frame
@@ -94,8 +108,11 @@ class Streamer:
         frame = Image.new(mode="RGB", size=(1280, 720))
 
         # Scale and paste
-        image = image.resize((960, 720), Image.ANTIALIAS)
-        frame.paste(image)
+        scaledSSTV = image[0].resize((960, 720), Image.ANTIALIAS)
+        frame.paste(scaledSSTV)
+
+        scaledWaveform = image[1].resize((1280 - 720, self.scrHeight), Image.ANTIALIAS)
+        frame.paste(scaledWaveform, (self.scrWidth - 65, 0))
 
         # Populate text, normally this should poll or use shared vars!
         info = f"""
@@ -122,7 +139,7 @@ NOMETA
 
         # Draw text
         draw = ImageDraw.Draw(frame)
-        draw.text((960 + 10, 10), info, font=self.font, align="left")
+        draw.text((970, 200), info, font=self.font, align="left", fill=(255, 0, 0, 255))
 
         return frame
 
@@ -146,3 +163,6 @@ if __name__ == "__main__":
 
     # myStreamer.drawGraphics(Image.open("../../Resources/KW1FOX-1_320x240.png")).show()
     myStreamer.stream()
+
+    # imgs = myStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
+    # myStreamer.drawGraphics(imgs).show()
