@@ -149,7 +149,9 @@ NOMETA
         """
 
         while True:
-            self.drawGraphics(self.getFrame()).save(self.pipe.stdin, "PNG")
+            self.drawGraphics(self.cropFrame(self.getFrame())).save(
+                self.pipe.stdin, "PNG"
+            )
 
     def __del__(self):
         self.dsp.close()
