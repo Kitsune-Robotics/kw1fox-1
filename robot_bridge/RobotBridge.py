@@ -1,7 +1,9 @@
 # Kitsune Scientific
 
-import argparse
+import socket
+import asyncio
 import logging
+import argparse
 
 
 class RobotBridge:
@@ -9,11 +11,30 @@ class RobotBridge:
         # Copy in args
         self.args = _args
 
+        # Socket/Server
+        self.host = "localhost"
+        self.port = 15555
+
         logging.info(f"Starting RobotBridge, sim mode = {self.args.sim}")
 
-    def run(self):
-        while True:
-            pass
+    async def handle_client(self, reader, writer):
+        request = None
+
+        while request != "quit":
+            request = (await reader.read(255)).decode("utf8")
+
+            response = str(request) + "\n"
+
+            writer.write(response.encode("utf8"))
+            await writer.drain()
+
+        writer.close()
+
+    async def run(self):
+        server = await asyncio.start_server(self.handle_client, self.host, self.port)
+
+        async with server:
+            await server.serve_forever()
 
 
 if __name__ == "__main__":
@@ -31,4 +52,4 @@ if __name__ == "__main__":
     robotBridge = RobotBridge(args)
 
     # Run the bridge
-    robotBridge.run()
+    asyncio.run(robotBridge.run())
