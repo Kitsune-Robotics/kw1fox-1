@@ -189,9 +189,11 @@ NOMETA
                 secondly, robot_util prints to stio witch is really annoying and dosent use logging!
                 """
                 self.deleteme = int(time.time())
-                
+
                 # Send camera alive
-                robot_util.sendCameraAliveMessage(self.api_server, self.camera_id, self.stream_key)
+                robot_util.sendCameraAliveMessage(
+                    self.api_server, self.camera_id, self.stream_key
+                )
 
     def __del__(self):
         self.dsp.close()
