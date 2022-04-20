@@ -2,7 +2,7 @@
 Description=Runs the robotstreamer stream
 
 [Service]
-ExecStart=sudo su -l houston -c "/opt/radio/lewis-crawler/Software/houston/stream.sh"
+ExecStart=sudo su -l houston -c "/opt/radio/kw1fox-1/houston/stream.sh"
 Restart=on-failure
 
 [Install]
