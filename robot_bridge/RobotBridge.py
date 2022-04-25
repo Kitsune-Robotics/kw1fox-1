@@ -18,16 +18,20 @@ class RobotBridge:
         logging.info(f"Starting RobotBridge, sim mode = {self.args.sim}")
 
     async def handle_client(self, reader, writer):
+        """
+        A handle_client is spawned per client
+        """
         request = None
 
         while request != "quit":
-            request = (await reader.read(255)).decode("utf8")
+            # Decode request
+            request = str((await reader.read(255)).decode("utf8"))
+            logging.debug(f'Got a new instruction "{request}"')
 
-            response = str(request)
-
-            writer.write(response.encode("utf8"))
-
-            logging.info(f'Got a new instruction "{response}"')
+            # Construct response
+            response = request
+            writer.write(response.encode("utf8"))  # Send response
+            logging.debug(f'Sent reply to instruction "{request}", "{response}"')
 
             await writer.drain()
 
