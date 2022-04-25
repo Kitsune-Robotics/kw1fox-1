@@ -23,12 +23,16 @@ class RobotBridge:
         while request != "quit":
             request = (await reader.read(255)).decode("utf8")
 
-            response = str(request) + "\n"
+            response = str(request)
 
             writer.write(response.encode("utf8"))
+
+            logging.info(f'Got a new instruction "{response}"')
+
             await writer.drain()
 
         writer.close()
+        logging.warning("Client disconnected from session!")
 
     async def run(self):
         server = await asyncio.start_server(self.handle_client, self.host, self.port)
