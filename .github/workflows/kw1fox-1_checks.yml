@@ -55,8 +55,8 @@ jobs:
       - name: Install deps
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
         run: |
-          pipenv install --deploy --dev
+          cd robot_bridge && pipenv install --deploy --dev
 
       - name: Run tests
         run: |
-          make test
+          cd robot_bridge && make test
