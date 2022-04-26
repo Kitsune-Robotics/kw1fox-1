@@ -3,7 +3,7 @@ import aprs
 import json
 import binascii
 
-from black import main
+from io import StringIO
 
 """
 Frame tools used to build and validate frames.
@@ -44,9 +44,12 @@ def buildDataFrame(data: dict):
     return dataFrame
 
 
-def validateDataFrame(frame):
+def validateDataFrame(frame, partial_frame=False):
     """
     Uses the CRC to validate a frame's data
+
+    Returns the stripped json (if valid) and a valid bool
+    ex: ({}, True)
     """
 
     # Text encoding to use
@@ -55,6 +58,9 @@ def validateDataFrame(frame):
     # Strip the json out
     stripped_json = "{" + re.search("{(.*?)}", str(frame)).group(1) + "}"
 
+    # Convert the stripped json to a dict
+    stripped_dict = json.load(StringIO(stripped_json))
+
     # Strip the CRC out
     stripped_crc = str(frame).split(":")
 
@@ -62,8 +68,11 @@ def validateDataFrame(frame):
     for split in stripped_crc:
         try:
             if int(binascii.crc32(bytes(stripped_json, encoding))) == int(split):
-                return True
+                return (stripped_dict, True)
         except ValueError:
             pass
 
-    return False
+    if not partial_frame:
+        return ({}, False)
+    else:
+        return (stripped_dict, False)
