@@ -56,7 +56,7 @@ def validateDataFrame(frame, partial_frame=False):
     encoding = "utf-8"
 
     # Strip the json out
-    stripped_json = "{" + re.search("{(.*?)}", str(frame)).group(1) + "}"
+    stripped_json = "{" + re.search("{(.*?)}", str(frame)).group(1)
 
     # Convert the stripped json to a dict
     stripped_dict = json.load(StringIO(stripped_json))
