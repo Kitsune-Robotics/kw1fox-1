@@ -1,8 +1,15 @@
-from decimal import DivisionByZero
 import re
 import aprs
 import json
 import binascii
+
+from black import main
+
+"""
+Frame tools used to build and validate frames.
+
+The robot should have a copy of this library as well.
+"""
 
 
 def buildDataFrame(data: dict):
@@ -37,7 +44,7 @@ def buildDataFrame(data: dict):
     return dataFrame
 
 
-def validateFrame(frame):
+def validateDataFrame(frame):
     """
     Uses the CRC to validate a frame's data
     """
@@ -46,10 +53,10 @@ def validateFrame(frame):
     encoding = "utf-8"
 
     # Strip the json out
-    stripped_json = "{" + re.search("{(.*?)}", frame).group(1) + "}"
+    stripped_json = "{" + re.search("{(.*?)}", str(frame)).group(1) + "}"
 
     # Strip the CRC out
-    stripped_crc = frame.split(":")
+    stripped_crc = str(frame).split(":")
 
     # This is super messy but it works lol <3
     for split in stripped_crc:
@@ -60,19 +67,3 @@ def validateFrame(frame):
             pass
 
     return False
-
-
-# Data to encode
-data = {
-    "CMD": "NOOP",
-    "ARGS": "-tcv --batt-on",
-}
-
-frame = buildDataFrame(data)
-print(frame)
-
-# Fuckup frame
-frame = str(frame)[:50] + "Z" + str(frame)[51:]
-print(frame)
-
-print(validateFrame(str(frame)))

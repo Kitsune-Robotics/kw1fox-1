@@ -7,3 +7,6 @@ install:
 
 sim:
 	pipenv run python RobotBridge.py --sim
+
+test:
+	pipenv run python -m pytest
