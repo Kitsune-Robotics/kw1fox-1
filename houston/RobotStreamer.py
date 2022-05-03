@@ -42,10 +42,31 @@ class Streamer:
         videoPort = endpointData["port"]
         self.stream_key = os.environ.get("STREAMKEY")
 
-        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/"
+        ffmpegSettings = [
+            "ffmpeg",
+            "-f",
+            "image2pipe",
+            "-vcodec",
+            "png",
+            "-r",
+            "25",
+            "-i",
+            "-",  # Inject pil images here
+            "-f",
+            "mpegts",
+            "-codec:v",
+            "mpeg1video",
+            "-b:v",
+            "2500K",
+            "-bf",
+            "0",
+            "-muxdelay",
+            "0.001",
+            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
+        ]
 
         # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(ffmpegSettings.split(), stdin=PIPE, stderr=STDOUT)
+        self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT)
 
         # Send camera alive
         robot_util.sendCameraAliveMessage(
@@ -186,7 +207,7 @@ NOMETA
             self.drawGraphics(self.cropFrame(self.getFrame())).save(
                 self.pipe.stdin, "PNG"
             )
-            #TODO: This could be optimized with some multithreading
+            # TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
             if int(time.time()) - self.deleteme > 10:
