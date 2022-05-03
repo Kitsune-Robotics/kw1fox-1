@@ -42,10 +42,13 @@ class Streamer:
         videoPort = endpointData["port"]
         self.stream_key = os.environ.get("STREAMKEY")
 
-        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamHeight}/{self.streamWidth}/"
+        ffmpegSettings = f"ffmpeg -f image2pipe -vcodec png -r 25 -i - -f mpegts -codec:v mpeg1video -b:v 2500K -bf 0 -muxdelay 0.001 http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/"
 
         # This is the ffmpeg pipe streamer!
         self.pipe = sp.Popen(ffmpegSettings.split(), stdin=PIPE, stderr=STDOUT)
+
+        # Send camera alive
+        robot_util.sendCameraAliveMessage(self.api_server, self.camera_id, self.stream_key)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
@@ -203,10 +206,10 @@ NOMETA
 
 
 if __name__ == "__main__":
-    myStreamer = Streamer()
+    robotStreamer = Streamer()
 
-    myStreamer.stream()
+    robotStreamer.stream()
 
-    # imgs = myStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
-    # myStreamer.getLogs().show()
-    # myStreamer.drawGraphics(imgs).show()
+    # imgs = robotStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
+    # robotStreamer.getLogs().show()
+    # robotStreamer.drawGraphics(imgs).show()
