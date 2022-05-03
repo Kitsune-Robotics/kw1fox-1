@@ -33,8 +33,8 @@ class Streamer:
         self.lastLog = int(time.time())
 
         # Api data
-        self.camera_id = 5505
-        self.api_server = "http://api.robotstreamer.com:8080"
+        self.camera_id = "5505"
+        self.api_server = "https://api.robotstreamer.com"
         endpointData = rsutil.getVideoEndpoint(self.api_server, self.camera_id)
 
         # ffmpeg
