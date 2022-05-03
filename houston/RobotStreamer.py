@@ -48,7 +48,9 @@ class Streamer:
         self.pipe = sp.Popen(ffmpegSettings.split(), stdin=PIPE, stderr=STDOUT)
 
         # Send camera alive
-        robot_util.sendCameraAliveMessage(self.api_server, self.camera_id, self.stream_key)
+        robot_util.sendCameraAliveMessage(
+            self.api_server, self.camera_id, self.stream_key
+        )
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
