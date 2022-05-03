@@ -126,12 +126,12 @@ class Streamer:
         frame = Image.new(mode="RGB", size=(self.streamWidth, self.streamHeight))
 
         # Scale and paste the SSTV image
-        scaledSSTV = image[0].resize((960, self.streamHeight), Image.LANCZOS)
+        scaledSSTV = image[0].resize((960, self.streamHeight), Image.Resampling.LANCZOS)
         frame.paste(scaledSSTV)
 
         # Scale and paste the waveform image
         scaledWaveform = image[1].resize(
-            (self.streamWidth - 720, self.scrHeight), Image.LANCZOS
+            (self.streamWidth - 720, self.scrHeight), Image.Resampling.LANCZOS
         )
         frame.paste(scaledWaveform, (self.scrWidth - 65, 0))
 
