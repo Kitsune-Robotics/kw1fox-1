@@ -186,6 +186,7 @@ NOMETA
             self.drawGraphics(self.cropFrame(self.getFrame())).save(
                 self.pipe.stdin, "PNG"
             )
+            #TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
             if int(time.time()) - self.deleteme > 10:
