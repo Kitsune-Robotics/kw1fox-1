@@ -76,8 +76,21 @@ class Streamer:
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
         self.font = ImageFont.truetype(r"../resources/RadioFont.ttf", self.fontSize)
+        self.currentFrame = Image.new(
+            mode="RGB", size=(self.streamWidth, self.streamHeight)
+        )  # The currently displayed frame
+        self.redrawFrame = True
 
         self.deleteme = int(time.time())
+
+    def refreshStream(self):
+        """
+        Sets the redraw frame flag
+        to tell the computer to redo
+        the current frame.
+        """
+
+        self.redrawFrame = True
 
     def getFrame(self):
         """
@@ -110,6 +123,8 @@ class Streamer:
 
         if len(self.streamLog) > 12:
             self.streamLog.pop(0)
+
+        self.refreshStream()
 
     def getLogBox(self):
         logboxWidth = 1000
@@ -203,10 +218,12 @@ NOMETA
         """
 
         while True:
+            if self.redrawFrame:
+                # Redraw frame if required
+                self.currentFrame = self.drawGraphics(self.cropFrame(self.getFrame()))
+
             # Draw a frame into the ffmpeg pipe
-            self.drawGraphics(self.cropFrame(self.getFrame())).save(
-                self.pipe.stdin, "PNG"
-            )
+            self.currentFrame.save(self.pipe.stdin, "PNG")
             # TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
