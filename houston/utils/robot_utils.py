@@ -102,7 +102,7 @@ def makePOST(url, data):
     return response
 
 
-def sendCameraAliveMessage(apiServer, cameraID, streamKey):
+def sendCameraAliveMessage(apiServer: str, cameraID: str, streamKey: str) -> None:
 
     print("sending camera alive message")
     url = "%s/v1/set_camera_status" % (apiServer)
