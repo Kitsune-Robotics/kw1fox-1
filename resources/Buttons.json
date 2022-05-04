@@ -21,28 +21,39 @@
                 "label": "Movement Controls (vote based)",
                 "buttons": [
                     {
-                        "label": "left",
+                        "label": "Left",
                         "price": 0,
                         "command": "L",
                         "keycode": 37
                     },
                     {
-                        "label": "right",
+                        "label": "Right",
                         "price": 0,
                         "command": "R",
                         "keycode": 39
                     },
                     {
-                        "label": "forward",
+                        "label": "Forward",
                         "price": 0,
                         "command": "F",
                         "keycode": 38
                     },
                     {
-                        "label": "back",
+                        "label": "Back",
                         "price": 0,
                         "command": "B",
                         "keycode": 40
+                    }
+                ]
+            },
+            {
+                "label": "Misc",
+                "buttons": [
+                    {
+                        "label": "Version",
+                        "price": 0,
+                        "command": "V",
+                        "keycode": 41
                     }
                 ]
             }
