@@ -1,0 +1,8 @@
+[Unit]
+Description=Runs the robot bridge service
+
+[Service]
+ExecStart=sudo su -l houston -c "/opt/radio/kw1fox-1/robot_bridge/robot_bridge.sh"
+
+[Install]
+WantedBy=multi-user.target

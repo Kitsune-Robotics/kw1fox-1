@@ -1,8 +1,12 @@
 import os
 import time
+import json
 import logging
 import subprocess as sp
+import utils.rsUtils as rsutil
+import utils.robot_utils as robot_util
 
+from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
 
@@ -11,6 +15,9 @@ class Streamer:
     def __init__(self):
         # Display settings
         self.scrWidth, self.scrHeight = 1024, 768
+
+        # Stream/graphics
+        self.streamWidth, self.streamHeight = 1280, 720
 
         # Logging
         logging.basicConfig(level=logging.DEBUG)
@@ -25,62 +32,50 @@ class Streamer:
         self.streamLog = ["Stream just started!", "Welcome!"]
         self.lastLog = int(time.time())
 
+        # Api data
+        self.camera_id = "5505"
+        self.api_server = "https://api.robotstreamer.com"
+        endpointData = rsutil.getVideoEndpoint(self.api_server, self.camera_id)
+
         # ffmpeg
-        cmd_out = [
+        videoHost = endpointData["host"]
+        videoPort = endpointData["port"]
+        self.stream_key = os.environ.get("STREAMKEY")
+
+        # Send camera alive
+        robot_util.sendCameraAliveMessage(
+            self.api_server, self.camera_id, self.stream_key
+        )
+
+        ffmpegSettings = [
             "ffmpeg",
             "-f",
             "image2pipe",
             "-vcodec",
             "png",
             "-r",
-            "5",  # FPS
+            "25",
             "-i",
-            "-",  # Indicated input comes from pipe
-            "-vcodec",
-            "libx264",
-            "-profile:v",
-            "main",
-            "-pix_fmt",
-            "yuv420p",
-            "-preset:v",
-            "medium",
-            "-r",
-            "30",
-            "-g",
-            "10",
-            "-keyint_min",
-            "60",
-            "-sc_threshold",
-            "0",
-            "-b:v",
-            "2500k",
-            "-maxrate",
-            "2500k",
-            "-bufsize",
-            "2500k",
-            "-sws_flags",
-            "lanczos+accurate_rnd",
-            "-acodec",
-            "aac",
-            "-b:a",
-            "96k",
-            "-r",
-            "15",
-            "-ar",
-            "48000",
-            "-ac",
-            "2",
+            "-",  # Inject pil images here
             "-f",
-            "flv",
-            os.environ.get('STREAMURL'),
+            "mpegts",
+            "-codec:v",
+            "mpeg1video",
+            "-b:v",
+            "2500K",
+            "-bf",
+            "0",
+            "-muxdelay",
+            "0.001",
+            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
         ]
 
         # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(cmd_out, stdin=sp.PIPE)
+        self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
-        self.font = ImageFont.truetype(r"../../Resources/RadioFont.ttf", self.fontSize)
+        self.font = ImageFont.truetype(r"../resources/RadioFont.ttf", self.fontSize)
 
         self.deleteme = int(time.time())
 
@@ -148,17 +143,16 @@ class Streamer:
         Draws graphics and sprites over
         a frame
         """
-        streamWidth, streamHeight = 1280, 720
 
-        frame = Image.new(mode="RGB", size=(streamWidth, streamHeight))
+        frame = Image.new(mode="RGB", size=(self.streamWidth, self.streamHeight))
 
         # Scale and paste the SSTV image
-        scaledSSTV = image[0].resize((960, streamHeight), Image.LANCZOS)
+        scaledSSTV = image[0].resize((960, self.streamHeight), Image.Resampling.LANCZOS)
         frame.paste(scaledSSTV)
 
         # Scale and paste the waveform image
         scaledWaveform = image[1].resize(
-            (streamWidth - 720, self.scrHeight), Image.LANCZOS
+            (self.streamWidth - 720, self.scrHeight), Image.Resampling.LANCZOS
         )
         frame.paste(scaledWaveform, (self.scrWidth - 65, 0))
 
@@ -198,7 +192,7 @@ NOMETA
         # Scale and paste the alerts/log window
         drawLogbox, scaledLogbox = self.getLogBox()
         if drawLogbox:
-            logboxCenter = int(streamWidth / 2) - int(scaledLogbox.size[0] / 2)
+            logboxCenter = int(self.streamWidth / 2) - int(scaledLogbox.size[0] / 2)
             frame.paste(scaledLogbox, (logboxCenter, 200))
 
         return frame
@@ -209,14 +203,24 @@ NOMETA
         """
 
         while True:
+            # Draw a frame into the ffmpeg pipe
             self.drawGraphics(self.cropFrame(self.getFrame())).save(
                 self.pipe.stdin, "PNG"
             )
+            # TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
-            if int(time.time()) - self.deleteme > 120:
+            if int(time.time()) - self.deleteme > 10:
+                """
+                First off this should be a async scheduled function
+                secondly, robot_util prints to stio witch is really annoying and dosent use logging!
+                """
                 self.deleteme = int(time.time())
-                self.addLog(f"The current time is now {int(time.time())}")
+
+                # Send camera alive
+                robot_util.sendCameraAliveMessage(
+                    self.api_server, self.camera_id, self.stream_key
+                )
 
     def __del__(self):
         self.dsp.close()
@@ -226,10 +230,10 @@ NOMETA
 
 
 if __name__ == "__main__":
-    myStreamer = Streamer()
+    robotStreamer = Streamer()
 
-    myStreamer.stream()
+    robotStreamer.stream()
 
-    # imgs = myStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
-    # myStreamer.getLogs().show()
-    # myStreamer.drawGraphics(imgs).show()
+    # imgs = robotStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
+    # robotStreamer.getLogs().show()
+    # robotStreamer.drawGraphics(imgs).show()
