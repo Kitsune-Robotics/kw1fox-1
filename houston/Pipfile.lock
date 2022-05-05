@@ -61,7 +61,7 @@
         "robotstreamer-utils": {
             "editable": true,
             "git": "https://github.com/KenwoodFox/robotstreamer.git",
-            "ref": "396405b7debba3d962c6e3a08b32dce0bb0f74bd"
+            "ref": "dcccc8b291aef21688da79b8c17ecb418fcf8f40"
         },
         "six": {
             "hashes": [
