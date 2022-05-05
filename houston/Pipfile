@@ -6,8 +6,13 @@ name = "pypi"
 [packages]
 xlib = "*"
 pillow = "*"
-robotstreamer-utils = {editable = true, ref = "feat/library_meta", git = "https://github.com/KenwoodFox/robotstreamer.git"}
+websockets = "*"
 
 [dev-packages]
 
 [requires]
+
+[packages.robotstreamer-utils]
+editable = true
+ref = "feat/library_meta"
+git = "https://github.com/KenwoodFox/robotstreamer.git"

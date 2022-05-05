@@ -9,6 +9,9 @@ import robotstreamer_utils.robot_util as robot_util
 from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
+from datetime import datetime
+
+from utils.controller import rsController
 
 
 class Streamer:
@@ -29,7 +32,9 @@ class Streamer:
         self.root = self.dsp.screen().root
 
         # This holds the logs shown by the LogBox
-        self.streamLog = ["Stream just started!", "Welcome!"]
+        self.streamLog = []
+        self.addLog("Stream just started!")
+        self.addLog("Welcome!")
         self.lastLog = int(time.time())
 
         # Api data
@@ -71,7 +76,7 @@ class Streamer:
         ]
 
         # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT)
+        self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT, stdout=DEVNULL)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
@@ -82,6 +87,9 @@ class Streamer:
         self.redrawFrame = True
 
         self.deleteme = int(time.time())
+
+        # Construct the robot controller, constructing it will autostart its run routine
+        self.controller = rsController(self)
 
     def refreshStream(self):
         """
@@ -118,6 +126,10 @@ class Streamer:
         return sstvImage, waveformImage
 
     def addLog(self, newLog):
+        # Add timestamp
+        logTime = datetime.now().strftime("[%H:%M:%S] ")
+        newLog = logTime + newLog
+
         self.streamLog.append(newLog)
         self.lastLog = int(time.time())
 
