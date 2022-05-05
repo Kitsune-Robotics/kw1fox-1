@@ -4,7 +4,7 @@ import json
 import logging
 import subprocess as sp
 import utils.rsUtils as rsutil
-import utils.robot_utils as robot_util
+import robotstreamer_utils.robot_util as robot_util
 
 from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
