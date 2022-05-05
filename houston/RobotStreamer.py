@@ -87,9 +87,6 @@ class Streamer:
 
         self.deleteme = int(time.time())
 
-        # Construct the robot controller, constructing it will autostart its run routine
-        self.controller = rsController(self)
-
     def refreshStream(self):
         """
         Sets the redraw frame flag
@@ -118,7 +115,7 @@ class Streamer:
         Crops the full frame image into a waveform and an image display
         """
 
-        sstvImage = image.crop((0, 182, 580, 620))
+        sstvImage = image.crop((4, 182, 580, 620))
 
         waveformImage = image.crop((865, 30, self.scrWidth - 2, self.scrHeight - 74))
 
@@ -227,6 +224,9 @@ NOMETA
         """
         Actually streams!
         """
+
+        # Construct the robot controller, constructing it will autostart its run routine
+        self.controller = rsController(self)
 
         while True:
             if self.redrawFrame:
