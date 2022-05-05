@@ -33,8 +33,7 @@ class Streamer:
 
         # This holds the logs shown by the LogBox
         self.streamLog = []
-        self.addLog("Stream just started!")
-        self.addLog("Welcome!")
+        self.addLog("Houston rebooted. Welcome to the stream!")
         self.lastLog = int(time.time())
 
         # Api data
@@ -188,7 +187,7 @@ class Streamer:
 KW1FOX-1
 Online!
 Volt: N/A
-Last comm: {int(time.time())}
+Last comm: {datetime.now().strftime("[%H:%M:%S]")}
 
 KW1FOX-2
 Offline.
@@ -198,7 +197,7 @@ Last comm: N/A
 KW1FOX-3
 Offline.
 Volt: N/A
-Last comm: {self.lastLog}
+Last comm: {time.strftime("[%H:%M:%S]", time.localtime(self.lastLog))}
 
 Currently Showing:
 KW1FOX-1
