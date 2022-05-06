@@ -33,8 +33,7 @@ class Streamer:
 
         # This holds the logs shown by the LogBox
         self.streamLog = []
-        self.addLog("Stream just started!")
-        self.addLog("Welcome!")
+        self.addLog("Houston rebooted. Welcome to the stream!")
         self.lastLog = int(time.time())
 
         # Api data
@@ -88,9 +87,6 @@ class Streamer:
 
         self.deleteme = int(time.time())
 
-        # Construct the robot controller, constructing it will autostart its run routine
-        self.controller = rsController(self)
-
     def refreshStream(self):
         """
         Sets the redraw frame flag
@@ -119,7 +115,7 @@ class Streamer:
         Crops the full frame image into a waveform and an image display
         """
 
-        sstvImage = image.crop((0, 182, 580, 620))
+        sstvImage = image.crop((4, 182, 580, 620))
 
         waveformImage = image.crop((865, 30, self.scrWidth - 2, self.scrHeight - 74))
 
@@ -188,7 +184,7 @@ class Streamer:
 KW1FOX-1
 Online!
 Volt: N/A
-Last comm: {int(time.time())}
+Last comm: {datetime.now().strftime("[%H:%M:%S]")}
 
 KW1FOX-2
 Offline.
@@ -198,7 +194,7 @@ Last comm: N/A
 KW1FOX-3
 Offline.
 Volt: N/A
-Last comm: {self.lastLog}
+Last comm: {time.strftime("[%H:%M:%S]", time.localtime(self.lastLog))}
 
 Currently Showing:
 KW1FOX-1
@@ -228,6 +224,9 @@ NOMETA
         """
         Actually streams!
         """
+
+        # Construct the robot controller, constructing it will autostart its run routine
+        self.controller = rsController(self)
 
         while True:
             if self.redrawFrame:

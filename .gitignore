@@ -13,3 +13,5 @@ __pycache__
 
 # Dev
 .vscode
+_test
+.pytest_cache
