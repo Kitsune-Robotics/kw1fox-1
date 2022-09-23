@@ -42,7 +42,7 @@ class rsController:
         self.cmd = Command.STBY
         self.isDone = True
 
-        self.streamer.addLog("rsController Connected")
+        self.streamer.addLog("rsController Connected.")
 
         # Start her up!
         _thread.start_new_thread(self.run, ())
@@ -112,7 +112,7 @@ class rsController:
                     )
                 )
                 logging.info("Validated with the new handshake")
-                self.streamer.addLog("Controller reconnected")
+                self.streamer.addLog("Controller reconnected.")
             else:
                 # validation handshake old
                 await websocket.send(json.dumps({"command": self.streamer.stream_key}))
