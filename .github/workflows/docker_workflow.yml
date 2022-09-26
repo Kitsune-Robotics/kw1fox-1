@@ -1,4 +1,4 @@
-name: Build Containers
+name: Build Images
 
 on:
   push:
@@ -20,6 +20,11 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    strategy:
+      matrix:
+        container:
+          - Houston-SSTV
 
     steps:
       - name: Checkout repository
@@ -53,12 +58,12 @@ jobs:
         run: |
           echo "${{ steps.branch-name.outputs.current_branch }}"
           echo "${{ steps.meta.outputs.tags }}"
-          echo "CUSTOM_TAG=ghcr.io/kitsune-robotics/kw1fox-1:$(echo "${{ steps.branch-name.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g; s/[A-Z]/\L&/g')" >> $GITHUB_ENV
+          echo "CUSTOM_TAG=ghcr.io/kitsune-robotics/$(echo ${{ matrix.container }} | sed 's/[A-Z]/\L&/g'):$(echo "${{ steps.branch-name.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g; s/[A-Z]/\L&/g')" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: Houston-SSTV
+          context: ${{ matrix.container }}
           push: true
           build-args: |
             GIT_COMMIT=${{ env.BUILD_HASH }}
