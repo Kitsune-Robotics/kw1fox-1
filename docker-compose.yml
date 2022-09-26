@@ -1,6 +1,13 @@
 version: '3.8'
 
 services:
+  # Runs QSSTV and publishes images to a shared vol
   Houston-SSTV:
     build: Houston-SSTV
     image: houston/sstv:v1
+    volumes:
+      - sstv-data:/mnt/sstv-data
+
+volumes:
+  # Shared volume for saved sstv pictures
+  sstv-data:

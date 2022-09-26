@@ -1,22 +1,19 @@
 FROM debian:latest
 
-# Install and update python + pip
-# RUN pip install --upgrade pip
-
-# Install other deps
-RUN apt update \
-    && apt install -y xvfb qsstv
-
-# For debugging
-RUN apt install -y x11vnc
-EXPOSE 5920
-
 # Setup home
 ARG HOME="/app"
 ENV HOME=${HOME}
 
 # Set the working directory to app home
 WORKDIR ${HOME}
+
+# Install virt frame buffer and qsstv deps
+RUN apt update \
+    && apt install -y xvfb qsstv pulseaudio
+
+# For debugging
+RUN apt install -y x11vnc
+EXPOSE 5920
 
 # Copy config files
 RUN mkdir -p .config/ON4QZ
