@@ -1,3 +1,5 @@
+[![Build Images](https://github.com/Kitsune-Robotics/kw1fox-1/actions/workflows/docker_workflow.yml/badge.svg)](https://github.com/Kitsune-Robotics/kw1fox-1/actions/workflows/docker_workflow.yml)
+
 # kw1fox-1
 Software and tools for the KW1FOX-1 radio station
 
