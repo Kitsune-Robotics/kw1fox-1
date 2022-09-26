@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2022-09-25T22:04:34.219Z" agent="5.0 (X11)" etag="gQft-A2236BZIzFy70Mz" version="20.2.7" type="device">
+  <diagram id="ZUCljjVQ4_z3qXZLYxh9" name="Page-1">
+    <mxGraphModel dx="1422" dy="684" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="SkQDuvA7Z922PXuxOzho-3" value="&lt;div&gt;Store Logs and Images&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.145;entryY=0;entryDx=0;entryDy=4.35;entryPerimeter=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-1" target="SkQDuvA7Z922PXuxOzho-2" edge="1">
+          <mxGeometry x="-0.3498" y="-25" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-1" target="SkQDuvA7Z922PXuxOzho-17" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="300" y="245" />
+              <mxPoint x="300" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-1" value="&lt;div&gt;Houston-Core&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="365" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-4" value="&lt;div&gt;Host Logs and images (webserver)&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.855;exitY=0;exitDx=0;exitDy=4.35;exitPerimeter=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-2" target="SkQDuvA7Z922PXuxOzho-1" edge="1">
+          <mxGeometry x="0.106" y="-47" relative="1" as="geometry">
+            <mxPoint x="-2" y="15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-2" value="Docker Volume" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="395" y="370" width="60" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-5" target="SkQDuvA7Z922PXuxOzho-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-5" target="SkQDuvA7Z922PXuxOzho-17" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="230" />
+              <mxPoint x="110" y="350" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-5" value="&lt;div&gt;Houston-SSTV&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="150" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-6" value="Runs SSTV receiver and streams&lt;br&gt;&lt;div&gt;locally&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="110" y="260" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-8" target="SkQDuvA7Z922PXuxOzho-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-8" value="&lt;div&gt;Physical Audio&lt;/div&gt;&lt;div&gt;Adapter&lt;br&gt;&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="385" y="10" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-9" target="SkQDuvA7Z922PXuxOzho-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-9" value="Some sort of audio restreamer?" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="365" y="100" width="115" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-12" target="SkQDuvA7Z922PXuxOzho-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="SkQDuvA7Z922PXuxOzho-12" target="SkQDuvA7Z922PXuxOzho-1" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-12" value="Houston-bell202" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="620" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-13" value="&lt;div&gt;Runs direwolf and does&lt;/div&gt;&lt;div&gt;bell202 with aprs style conn&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="590" y="260" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-17" value="&lt;div&gt;Robotstreamer&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="150" y="320" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="SkQDuvA7Z922PXuxOzho-18" value="Restreams everything to rs" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="120" y="380" width="170" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

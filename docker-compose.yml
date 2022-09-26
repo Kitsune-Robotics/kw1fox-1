@@ -1,0 +1,6 @@
+version: '3.8'
+
+services:
+  Houston-SSTV:
+    build: Houston-SSTV
+    image: houston/sstv:v1
