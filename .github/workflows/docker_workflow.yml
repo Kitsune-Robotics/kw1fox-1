@@ -25,6 +25,7 @@ jobs:
       matrix:
         container:
           - Houston-SSTV
+          - Houston-Direwolf
 
     steps:
       - name: Checkout repository

@@ -16,6 +16,16 @@ services:
         source: /run/user/1000/pulse
         target: /tmp/pulsesocket
 
+  # Direwolf sound card TNC
+  Houston-Direwolf:
+    build: Houston-Direwolf
+    image: houston/direwolf:v1
+    volumes:
+      # UID is important!
+      - type: bind
+        source: /run/user/1000/pulse
+        target: /tmp/pulsesocket
+
 volumes:
   # Shared volume for saved sstv pictures
   sstv-data:
