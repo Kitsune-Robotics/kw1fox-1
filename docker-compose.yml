@@ -5,8 +5,16 @@ services:
   Houston-SSTV:
     build: Houston-SSTV
     image: houston/sstv:v1
+    environment:
+      - PULSE_SERVER=tcp:10.85.3.155:34567
     volumes:
-      - sstv-data:/mnt/sstv-data
+      - type: volume
+        source: sstv-data
+        target: /mnt/sstv-data
+        # UID is important!
+      - type: bind
+        source: /run/user/1000/pulse
+        target: /tmp/pulsesocket
 
 volumes:
   # Shared volume for saved sstv pictures

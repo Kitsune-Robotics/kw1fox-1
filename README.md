@@ -1,12 +1,12 @@
 # kw1fox-1
 Software and tools for the KW1FOX-1 radio station
 
-## Installing qsstv and pulseaudio on server
+## Setting up Pulseaudio
 
-Requires `houston` user
+There are a lot of ways to get audio in and out of a container, for rn i decided to try this method: https://github.com/mviereck/x11docker/wiki/Container-sound:-ALSA-or-Pulseaudio#pulseaudio-over-tcp
 
-as well as qsstv (obvio)
+Maybe ill change it later, anyway, to load the module on the host, do this:
 
-and i should prolly install `pulseaudio` as well
-
-Also, i edited the xorg.conf so it never times out.
+```
+pactl load-module module-native-protocol-tcp  port=34567 auth-ip-acl=$Containerip
+```

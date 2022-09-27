@@ -3,6 +3,9 @@
 # Start xfvb
 Xvfb :60 -screen 0 1920x1080x16 &
 
+# Start audio
+export "PULSE_SERVER=unix:/tmp/pulsesocket" && pulseaudio --system &
+
 # Start qsstv
 export DISPLAY=:60 && qsstv &
 
