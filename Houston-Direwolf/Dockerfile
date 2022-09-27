@@ -22,6 +22,9 @@ RUN cd /tmp && \
     make install && \
     make install-conf
 
+# Copy in config files
+COPY direwolf.conf direwolf.conf
+
 # Copy in entrypoint
 COPY entrypoint.sh entrypoint.sh
 
