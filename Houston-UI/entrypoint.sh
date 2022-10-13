@@ -1,9 +1,10 @@
 #!/bin/sh
-
-export FLASK_APP="~/src/run.py"
-
 set -e
 
-flask db upgrade
+# export FLASK_APP="~/app/app.py"
 
-gunicorn -c gunicorn.config.py wsgi:app
+
+
+# flask db upgrade
+
+cd app && gunicorn --bind 0.0.0.0:5000 app:app
