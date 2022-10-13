@@ -26,6 +26,7 @@ jobs:
         container:
           - Houston-SSTV
           - Houston-Direwolf
+          - Houston-UI
 
     steps:
       - name: Checkout repository
