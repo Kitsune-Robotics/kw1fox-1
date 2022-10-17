@@ -1,0 +1,3 @@
+[submodule "Houston-SSTV/streamer/external/cpp-mjpeg-streamer"]
+	path = Houston-SSTV/streamer/external/cpp-mjpeg-streamer
+	url = https://github.com/nadjieb/cpp-mjpeg-streamer.git
