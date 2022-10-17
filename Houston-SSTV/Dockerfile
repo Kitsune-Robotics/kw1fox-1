@@ -15,6 +15,15 @@ RUN apt update \
 RUN apt install -y x11vnc
 EXPOSE 5920
 
+# Build streamer app
+RUN apt install -y cmake build-essential gcc libopencv-dev libx11-dev
+COPY streamer streamer
+RUN mkdir -p streamer/_build \
+    && cd streamer/_build \
+    && cmake .. \
+    && make \
+    && mv main ../../streamer_binary
+
 # Copy config files
 # QSSTV
 RUN mkdir -p .config/ON4QZ
