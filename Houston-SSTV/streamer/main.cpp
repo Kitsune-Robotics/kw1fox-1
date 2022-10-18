@@ -13,15 +13,6 @@ using MJPEGStreamer = nadjieb::MJPEGStreamer;
 
 void ImageFromDisplay(std::vector<uint8_t> &Pixels, int &Width, int &Height, int &BitsPerPixel)
 {
-    Display *display = XOpenDisplay(nullptr);
-    Window root = DefaultRootWindow(display);
-
-    XWindowAttributes attributes = {0};
-    XGetWindowAttributes(display, root, &attributes);
-
-    Width = attributes.width;
-    Height = attributes.height;
-
     XImage *img = XGetImage(display, root, 0, 0, Width, Height, AllPlanes, ZPixmap);
     BitsPerPixel = img->bits_per_pixel;
     Pixels.resize(Width * Height * 4);
@@ -36,7 +27,23 @@ int main()
 {
     std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 90};
 
+    // Create streamer
     MJPEGStreamer streamer;
+
+    // Open display
+    Display *display = XOpenDisplay(":60");
+    if (display == NULL)
+    {
+        printf("Error opening display!\n");
+    }
+    Window root = DefaultRootWindow(display);
+
+    // Get atributes
+    XWindowAttributes attributes = {0};
+    XGetWindowAttributes(display, root, &attributes);
+
+    Width = attributes.width;
+    Height = attributes.height;
 
     // By default "/shutdown" is the target to graceful shutdown the streamer
     // if you want to change the target to graceful shutdown:
@@ -55,7 +62,11 @@ int main()
     // Visit /shutdown or another defined target to stop the loop and graceful shutdown
     while (streamer.isRunning())
     {
-        ImageFromDisplay(Pixels, Width, Height, Bpp);
+        XImage *img = XGetImage(display, root, 0, 0, Width, Height, AllPlanes, ZPixmap);
+        BitsPerPixel = img->bits_per_pixel;
+        Pixels.resize(Width * Height * 4);
+
+        memcpy(&Pixels[0], img->data, Pixels.size());
 
         cv::Mat frame = cv::Mat(Height, Width, Bpp > 24 ? CV_8UC4 : CV_8UC3, &Pixels[0]);
 

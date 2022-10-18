@@ -7,6 +7,7 @@ services:
     image: houston/sstv:v1
     environment:
       - PULSE_SERVER=tcp:10.85.3.155:34567
+    privileged: true
     networks:
       - default
     ports:
