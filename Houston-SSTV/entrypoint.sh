@@ -10,7 +10,7 @@ Xvfb :60 -screen 0 1920x1080x16 &
 export DISPLAY=:60 && qsstv &
 
 # Start videostreamer
-export DISPLAY=:60 && ./streamer_binary &
+# export DISPLAY=:60 && ./streamer_binary &
 
 # For testing
 # x11vnc -passwd iamnotacrook -display :60 -N -forever &
