@@ -11,20 +11,12 @@
 // for convenience
 using MJPEGStreamer = nadjieb::MJPEGStreamer;
 
-void ImageFromDisplay(std::vector<uint8_t> &Pixels, int &Width, int &Height, int &BitsPerPixel)
-{
-    XImage *img = XGetImage(display, root, 0, 0, Width, Height, AllPlanes, ZPixmap);
-    BitsPerPixel = img->bits_per_pixel;
-    Pixels.resize(Width * Height * 4);
-
-    memcpy(&Pixels[0], img->data, Pixels.size());
-
-    XDestroyImage(img);
-    XCloseDisplay(display);
-}
-
 int main()
 {
+    int Width = 0;
+    int Height = 0;
+    int Bpp = 0;
+    std::vector<std::uint8_t> Pixels;
     std::vector<int> params = {cv::IMWRITE_JPEG_QUALITY, 90};
 
     // Create streamer
@@ -45,25 +37,14 @@ int main()
     Width = attributes.width;
     Height = attributes.height;
 
-    // By default "/shutdown" is the target to graceful shutdown the streamer
-    // if you want to change the target to graceful shutdown:
-    //      streamer.setShutdownTarget("/stop");
-
-    // By default std::thread::hardware_concurrency() workers is used for streaming
-    // if you want to use 4 workers instead:
-    //      streamer.start(8080, 4);
+    // Start the streamer
     streamer.start(8080);
-
-    int Width = 0;
-    int Height = 0;
-    int Bpp = 0;
-    std::vector<std::uint8_t> Pixels;
 
     // Visit /shutdown or another defined target to stop the loop and graceful shutdown
     while (streamer.isRunning())
     {
         XImage *img = XGetImage(display, root, 0, 0, Width, Height, AllPlanes, ZPixmap);
-        BitsPerPixel = img->bits_per_pixel;
+        Bpp = img->bits_per_pixel;
         Pixels.resize(Width * Height * 4);
 
         memcpy(&Pixels[0], img->data, Pixels.size());
@@ -91,6 +72,9 @@ int main()
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
+
+    // XDestroyImage(img);
+    XCloseDisplay(display);
 
     streamer.stop();
 }
