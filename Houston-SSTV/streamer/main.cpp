@@ -26,7 +26,8 @@ int main()
     Display *display = XOpenDisplay(":60");
     if (display == NULL)
     {
-        printf("Error opening display!\n");
+        std::cerr << "Error opening display!\n";
+        exit(EXIT_FAILURE);
     }
     Window root = DefaultRootWindow(display);
 
@@ -38,7 +39,7 @@ int main()
     Height = attributes.height;
 
     // Start the streamer
-    streamer.start(8080);
+    streamer.start(8888);
 
     // Visit /shutdown or another defined target to stop the loop and graceful shutdown
     while (streamer.isRunning())
