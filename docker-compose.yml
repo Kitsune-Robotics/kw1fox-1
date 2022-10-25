@@ -11,7 +11,7 @@ services:
     networks:
       - default
     ports:
-      - 8080:8080
+      - 8888:8888
     volumes:
       - type: volume
         source: sstv-data

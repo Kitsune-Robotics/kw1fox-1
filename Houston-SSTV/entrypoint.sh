@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Start xfvb
-Xvfb :60 -screen 0 1920x1080x32 &
+Xvfb :60 -screen 0 1920x1080x24 &
 
 # Start audio
 # export "PULSE_SERVER=unix:/tmp/pulsesocket" && pulseaudio --system &
