@@ -50,7 +50,7 @@ int main()
 
         if (img != NULL)
         {
-            memcpy(&Pixels[0], img->data, Pixels.size());
+            memcpy(&Pixels[0], img->data, Width * Height * ((Bpp + 7) / 8));
 
             cv::Mat frame = cv::Mat(Height, Width, Bpp > 24 ? CV_8UC4 : CV_8UC3, &Pixels[0]);
 
