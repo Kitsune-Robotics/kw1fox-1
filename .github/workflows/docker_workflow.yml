@@ -27,6 +27,7 @@ jobs:
           - Houston-SSTV
           - Houston-Direwolf
           - Houston-UI
+          - Houston-Streamer
 
     steps:
       - name: Checkout repository
