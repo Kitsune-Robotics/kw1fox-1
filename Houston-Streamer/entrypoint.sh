@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+set -e
 
 # Runs the robotstream
-cd app && python RobotStreamer.py
+python3 RobotStreamer.py

@@ -3,6 +3,7 @@ version: '3.8'
 services:
   # # Runs QSSTV and publishes images to a shared vol
   # Houston-SSTV:
+  #   restart: always
   #   build: Houston-SSTV
   #   image: houston/sstv:v1
   #   environment:
@@ -23,53 +24,56 @@ services:
 
   # Robotstreamer endpoint
   Houston-Streamer:
+    restart: always
     environment:
-      STREAMKEY: "Idk"
+      STREAMKEY: "secret!"
     build: Houston-Streamer
     image: houston/streamer:v1
     networks:
       - default
+    devices:
+      - "/dev/video0:/dev/video0"
+  # # Direwolf sound card TNC
+  # Houston-Direwolf:
+  #   restart: always
+  #   build: Houston-Direwolf
+  #   image: houston/direwolf:v1
+  #   volumes:
+  #     # UID is important!
+  #     - type: bind
+  #       source: /run/user/1000/pulse
+  #       target: /tmp/pulsesocket
 
-  # Direwolf sound card TNC
-  Houston-Direwolf:
-    build: Houston-Direwolf
-    image: houston/direwolf:v1
-    volumes:
-      # UID is important!
-      - type: bind
-        source: /run/user/1000/pulse
-        target: /tmp/pulsesocket
+  # Houston-UI:
+  #   restart: always
+  #   build: Houston-UI
+  #   image: houston/ui:v1
+  #   depends_on:
+  #     - Houston-db
+  #   environment:
+  #     STAGE: test
+  #     SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://user:pass@Houston-db/test
+  #   networks:
+  #     - default
+  #   ports:
+  #     - 5000:5000
+  #   volumes:
+  #     - ./app:/usr/src/app/app
+  #     - ./migrations:/usr/src/app/migrations
 
-  Houston-UI:
-    build: Houston-UI
-    image: houston/ui:v1
-    depends_on:
-      - Houston-db
-    environment:
-      STAGE: test
-      SQLALCHEMY_DATABASE_URI: postgresql+psycopg2://user:pass@Houston-db/test
-    networks:
-      - default
-    ports:
-      - 5000:5000
-    volumes:
-      - ./app:/usr/src/app/app
-      - ./migrations:/usr/src/app/migrations
-    restart: always
-
-  Houston-db:
-    environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-      POSTGRES_DB: test
-    image: postgres:latest
-    networks:
-      - default
-    ports:
-      - 5405:5432
-    restart: always
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+  # Houston-db:
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: pass
+  #     POSTGRES_DB: test
+  #   image: postgres:latest
+  #   networks:
+  #     - default
+  #   ports:
+  #     - 5405:5432
+  #   volumes:
+  #     - ./postgres-data:/var/lib/postgresql/data
 
 volumes:
   # Shared volume for saved sstv pictures

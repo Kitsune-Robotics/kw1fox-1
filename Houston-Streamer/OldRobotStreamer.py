@@ -1,42 +1,39 @@
 import os
-import sys
 import time
 import json
 import logging
 import subprocess as sp
 import utils.rsUtils as rsutil
-
-# import importlib.util
-# spec = importlib.util.spec_from_file_location(
-#     "robot_util", "resources/robotstreamer/robot_util.py"
-# )
-# robot_util = importlib.util.module_from_spec(spec)
-
-sys.path.append("utils/robotstreamer/")
-import robot_util as robot_util
+import robotstreamer_utils.robot_util as robot_util
 
 from subprocess import DEVNULL, PIPE, STDOUT
 from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
 from datetime import datetime
 
-# from utils.controller import rsController
+from utils.controller import rsController
 
 
 class Streamer:
     def __init__(self):
+        # Display settings
+        self.scrWidth, self.scrHeight = 1024, 768
+
         # Stream/graphics
         self.streamWidth, self.streamHeight = 1280, 720
 
-        # Logging/debug
+        # Logging
         logging.basicConfig(level=logging.DEBUG)
-        self.testImage = Image.new(
-            mode="RGB", size=(self.streamWidth, self.streamHeight)
-        )
+
+        # Create display
+        self.dsp = display.Display(":0")
+
+        # This is the root of the screen
+        self.root = self.dsp.screen().root
 
         # This holds the logs shown by the LogBox
         self.streamLog = []
-        self.addLog("Houston-Streamer rebooted. Welcome to the stream!")
+        self.addLog("Houston rebooted. Welcome to the stream!")
         self.lastLog = int(time.time())
 
         # Api data
@@ -82,7 +79,7 @@ class Streamer:
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
-        self.font = ImageFont.truetype(r"resources/RadioFont.ttf", self.fontSize)
+        self.font = ImageFont.truetype(r"../resources/RadioFont.ttf", self.fontSize)
         self.currentFrame = Image.new(
             mode="RGB", size=(self.streamWidth, self.streamHeight)
         )  # The currently displayed frame
@@ -101,10 +98,28 @@ class Streamer:
 
     def getFrame(self):
         """
-        Returns a single full frame.
+        Returns a single full frame from the xorg display server.
         """
 
-        return self.testImage
+        raw = self.root.get_image(
+            0, 0, self.scrWidth, self.scrHeight, X.ZPixmap, 0xFFFFFFFF
+        )
+        image = Image.frombytes(
+            "RGB", (self.scrWidth, self.scrHeight), raw.data, "raw", "BGRX"
+        )
+
+        return image
+
+    def cropFrame(self, image: Image):
+        """
+        Crops the full frame image into a waveform and an image display
+        """
+
+        sstvImage = image.crop((4, 182, 580, 620))
+
+        waveformImage = image.crop((865, 30, self.scrWidth - 2, self.scrHeight - 74))
+
+        return sstvImage, waveformImage
 
     def addLog(self, newLog):
         # Add timestamp
@@ -211,12 +226,12 @@ NOMETA
         """
 
         # Construct the robot controller, constructing it will autostart its run routine
-        # self.controller = rsController(self)
+        self.controller = rsController(self)
 
         while True:
             if self.redrawFrame:
                 # Redraw frame if required
-                self.currentFrame = self.getFrame()
+                self.currentFrame = self.drawGraphics(self.cropFrame(self.getFrame()))
 
             # Draw a frame into the ffmpeg pipe
             self.currentFrame.save(self.pipe.stdin, "PNG")
@@ -236,6 +251,8 @@ NOMETA
                 )
 
     def __del__(self):
+        self.dsp.close()
+
         self.pipe.stdin.close()
         self.pipe.wait()
 
@@ -244,3 +261,7 @@ if __name__ == "__main__":
     robotStreamer = Streamer()
 
     robotStreamer.stream()
+
+    # imgs = robotStreamer.cropFrame(Image.open("../../Resources/screenshot.png"))
+    # robotStreamer.getLogs().show()
+    # robotStreamer.drawGraphics(imgs).show()

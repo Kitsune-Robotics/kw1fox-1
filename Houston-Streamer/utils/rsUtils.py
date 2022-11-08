@@ -6,7 +6,7 @@ And imported mess, mostly imported mess.
 
 import json
 
-import robotstreamer_utils.robot_util as robot_util
+from .robotstreamer import robot_util
 
 """
 From https://github.com/robotstreamer/robotstreamer/blob/2f89d9acbca949ab0a9e2f8229da8c2cc1ffb26b/send_video.py#L155
