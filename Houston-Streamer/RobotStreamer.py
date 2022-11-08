@@ -1,4 +1,5 @@
 import os
+import io
 import sys
 import time
 import json
@@ -16,7 +17,6 @@ sys.path.append("utils/robotstreamer/")
 import robot_util as robot_util
 
 from subprocess import DEVNULL, PIPE, STDOUT
-from Xlib import display, X
 from PIL import Image, ImageFont, ImageDraw, ImageChops
 from datetime import datetime
 
@@ -30,9 +30,7 @@ class Streamer:
 
         # Logging/debug
         logging.basicConfig(level=logging.DEBUG)
-        self.testImage = Image.new(
-            mode="RGB", size=(self.streamWidth, self.streamHeight)
-        )
+        self.testImage = Image.open("resources/testPattern.jpg")
 
         # This holds the logs shown by the LogBox
         self.streamLog = []
@@ -219,7 +217,7 @@ NOMETA
                 self.currentFrame = self.getFrame()
 
             # Draw a frame into the ffmpeg pipe
-            self.currentFrame.save(self.pipe.stdin, "PNG")
+            self.currentFrame.save(self.pipe.stdin, "JPEG")
             # TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
