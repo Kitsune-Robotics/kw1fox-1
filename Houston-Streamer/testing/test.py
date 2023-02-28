@@ -4,12 +4,15 @@ import cv2 as cv
 
 cam = cv.VideoCapture(0)
 
+width = 1080
+height = 720
+
 process = (
     ffmpeg.input(
         filename="pipe:",
         format="rawvideo",
         pixel_format="bgr24",
-        s="1080x720",
+        s=f"{width}x{height}",
         framerate=25,
     )
     .output("out.mp4")
@@ -19,7 +22,13 @@ process = (
 
 for i in range(100):
     # retval, image = cam.read()
-    image = np.full((1080, 720, 3), 60, np.uint8)
+    image = np.full((width, height, 3), 60, np.uint8)
+    ret, snap = cam.read()
+
+    x_offset = y_offset = 50
+    image[
+        y_offset : y_offset + snap.shape[0], x_offset : x_offset + snap.shape[1]
+    ] = snap
     cv.putText(
         image,
         "TEXT ON VIDEO " + str(i),

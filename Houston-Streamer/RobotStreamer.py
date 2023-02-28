@@ -1,11 +1,11 @@
 import os
-import io
 import sys
 import time
-import json
+import ffmpeg
 import logging
 import subprocess as sp
 import utils.rsUtils as rsutil
+import cv2 as cv
 
 # import importlib.util
 # spec = importlib.util.spec_from_file_location(
@@ -52,31 +52,49 @@ class Streamer:
             self.api_server, self.camera_id, self.stream_key
         )
 
-        ffmpegSettings = [
-            "ffmpeg",
-            "-f",
-            "image2pipe",
-            "-vcodec",
-            "png",
-            "-r",
-            "25",
-            "-i",
-            "-",  # Inject pil images here
-            "-f",
-            "mpegts",
-            "-codec:v",
-            "mpeg1video",
-            "-b:v",
-            "2500K",
-            "-bf",
-            "0",
-            "-muxdelay",
-            "0.001",
-            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
-        ]
+        # ffmpegSettings = [
+        #     "ffmpeg",
+        #     "-f",
+        #     "image2pipe",
+        #     "-vcodec",
+        #     "png",
+        #     "-r",
+        #     "25",
+        #     "-i",
+        #     "-",  # Inject pil images here
+        #     "-f",
+        #     "mpegts",
+        #     "-codec:v",
+        #     "mpeg1video",
+        #     "-b:v",
+        #     "2500K",
+        #     "-bf",
+        #     "0",
+        #     "-muxdelay",
+        #     "0.001",
+        #     f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
+        # ]
 
-        # This is the ffmpeg pipe streamer!
-        self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT, stdout=DEVNULL)
+        # # This is the ffmpeg pipe streamer!
+        # self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT, stdout=DEVNULL)
+
+        self.ffmpeg = (
+            ffmpeg.input(
+                filename="pipe:",
+                format="rawvideo",
+                pixel_format="bgr24",
+                s="1080x720",
+                framerate=25,
+            )
+            .output(
+                f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
+                format="mpegts",
+                vcodec="mpeg1video",
+            )
+            .run_async(pipe_stdin=True)
+        )
+
+        self.cam = cv.VideoCapture(0)
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
@@ -217,7 +235,7 @@ NOMETA
                 self.currentFrame = self.getFrame()
 
             # Draw a frame into the ffmpeg pipe
-            self.currentFrame.save(self.pipe.stdin, "JPEG")
+            self.currentFrame.save(self.ffmpeg.stdin, "JPEG")
             # TODO: This could be optimized with some multithreading
 
             # Junk, delete me lol
@@ -233,9 +251,9 @@ NOMETA
                     self.api_server, self.camera_id, self.stream_key
                 )
 
-    def __del__(self):
-        self.pipe.stdin.close()
-        self.pipe.wait()
+    # def __del__(self):
+    #     self.pipe.stdin.close()
+    #     self.pipe.wait()
 
 
 if __name__ == "__main__":
