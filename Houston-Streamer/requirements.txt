@@ -1,0 +1,5 @@
+xlib
+pillow
+websockets
+opencv-python
+ffmpeg-python
