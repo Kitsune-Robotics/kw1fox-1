@@ -5,7 +5,6 @@ import ffmpeg
 import logging
 import subprocess as sp
 import utils.rsUtils as rsutil
-import cv2 as cv
 
 # import importlib.util
 # spec = importlib.util.spec_from_file_location(
@@ -41,6 +40,7 @@ class Streamer:
         self.camera_id = "5505"
         self.api_server = "https://api.robotstreamer.com"
         endpointData = rsutil.getVideoEndpoint(self.api_server, self.camera_id)
+        print(endpointData)
 
         # ffmpeg
         videoHost = endpointData["host"]
@@ -52,49 +52,53 @@ class Streamer:
             self.api_server, self.camera_id, self.stream_key
         )
 
-        # ffmpegSettings = [
-        #     "ffmpeg",
-        #     "-f",
-        #     "image2pipe",
-        #     "-vcodec",
-        #     "png",
-        #     "-r",
-        #     "25",
-        #     "-i",
-        #     "-",  # Inject pil images here
-        #     "-f",
-        #     "mpegts",
-        #     "-codec:v",
-        #     "mpeg1video",
-        #     "-b:v",
-        #     "2500K",
-        #     "-bf",
-        #     "0",
-        #     "-muxdelay",
-        #     "0.001",
-        #     f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
-        # ]
+        ffmpegSettings = [
+            "ffmpeg",
+            "-f",
+            "image2pipe",
+            "-vcodec",
+            "png",
+            "-r",
+            "25",
+            "-i",
+            "-",  # Inject pil images here
+            "-f",
+            "mpegts",
+            "-codec:v",
+            "mpeg1video",
+            "-b:v",
+            "2500K",
+            "-bf",
+            "0",
+            "-muxdelay",
+            "0.001",
+            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
+        ]
 
-        # # This is the ffmpeg pipe streamer!
-        # self.pipe = sp.Popen(ffmpegSettings, stdin=PIPE, stderr=STDOUT, stdout=DEVNULL)
-
-        self.ffmpeg = (
-            ffmpeg.input(
-                filename="pipe:",
-                format="rawvideo",
-                pixel_format="bgr24",
-                s="1080x720",
-                framerate=25,
-            )
-            .output(
-                f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
-                format="mpegts",
-                vcodec="mpeg1video",
-            )
-            .run_async(pipe_stdin=True)
+        print(
+            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/"
         )
 
-        self.cam = cv.VideoCapture(0)
+        # This is the ffmpeg pipe streamer!
+        self.ffmpeg = sp.Popen(
+            ffmpegSettings, stdin=PIPE, stderr=STDOUT, stdout=DEVNULL
+        )
+
+        # self.ffmpeg = (
+        #     ffmpeg.input(
+        #         filename="pipe:",
+        #         format="rawvideo",
+        #         pixel_format="bgr24",
+        #         s="1080x720",
+        #         framerate=25,
+        #     )
+        #     .output(
+        #         f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/",
+        #         format="mpegts",
+        #         vcodec="mpeg1video",
+        #     )
+        #     .run_async(pipe_stdin=True)
+        # )
 
         # Graphics and resources
         self.fontSize = 20  # This is easer than getting a tuple from ImageFont.getsize
