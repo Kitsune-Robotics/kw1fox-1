@@ -1,8 +1,8 @@
-import random
-import re
 import sys
-import threading
 import time
+import random
+import threading
+
 from flask import Flask, render_template
 from turbo_flask import Turbo
 

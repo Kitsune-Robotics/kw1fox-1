@@ -14,6 +14,7 @@ You can begin a local development session like so
 pipenv install -r requirements.txt
 pipenv shell
 cd app
+export FLASK_DEBUG=1
 flask run
 ```
 
