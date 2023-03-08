@@ -27,10 +27,6 @@ body {
   grid-row: 2;
 }
 
-#mapblock {
-  background-color: lightblue;
-}
-
 #logbook {
   background-color: orange;
 }
