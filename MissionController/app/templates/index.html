@@ -1,23 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div id="navbar">
-    <!-- Navbar stuff -->
-    <h1>Overview</h1>
-</div>
 
-<div class="toolsWrapper">
-    <div id="camerablock">
-        <img src="static/placeholder/320x240.png" alt="RobotImage">
-    </div>
-
-    <div id="logbook">
-        Logbook Here
-    </div>
-
-    <div id="graphbox">
-        Graph box here
-    </div>
+<!-- {% include "loadavg.html" %} -->
+<div id="wrapper">
+    {% include "windows/logbook.html" %}
+    {% include "windows/camera.html" %}
+    {% include "windows/graphs.html" %}
+    {% include "windows/statusbar.html" %}
 </div>
 
 {% endblock %}
