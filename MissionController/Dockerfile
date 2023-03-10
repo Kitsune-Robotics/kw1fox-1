@@ -14,6 +14,4 @@ ENV GIT_COMMIT=$GIT_COMMIT
 
 EXPOSE 8080
 
-ENTRYPOINT ["python"]
-
-CMD ["app/app.py"]
+ENTRYPOINT ["./entrypoint.sh"]
