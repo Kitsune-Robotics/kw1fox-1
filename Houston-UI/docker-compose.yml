@@ -16,8 +16,8 @@ services:
   #     - '5438:5432'
   #   tmpfs: /var/lib/postgresql/data
 
-  snub:
-    image: snub:$TAG
+  Houston-UI:
+    image: houston_ui:$TAG
     build:
       context: .
       dockerfile: Dockerfile

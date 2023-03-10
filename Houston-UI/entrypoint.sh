@@ -1,10 +1,3 @@
-#!/bin/sh
-set -e
+#!/bin/bash
 
-# export FLASK_APP="~/app/app.py"
-
-
-
-# flask db upgrade
-
-cd app && gunicorn --bind 0.0.0.0:5000 app:app
+cd MissionController && gunicorn -b 0.0.0.0:8000 main:app
