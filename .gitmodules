@@ -4,3 +4,6 @@
 [submodule "Houston-Streamer/utils/robotstreamer"]
 	path = Houston-Streamer/utils/robotstreamer
 	url = https://github.com/robotstreamer/robotstreamer.git
+[submodule "Houston-Sim/addons/godot_heightmap_plugin"]
+	path = Houston-Sim/addons/godot_heightmap_plugin
+	url = https://github.com/Zylann/godot_heightmap_plugin.git
