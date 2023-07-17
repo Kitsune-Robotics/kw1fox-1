@@ -9,9 +9,10 @@ script = ExtResource("3_8v4sj")
 mode = 0
 textures = [[], []]
 
-[node name="Node3D" type="Node3D"]
+[node name="Main" type="Node3D"]
 
 [node name="HTerrain" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -250, 0, -250)
 script = ExtResource("1_t5g4h")
 _terrain_data = ExtResource("2_7csrl")
 chunk_size = 32
