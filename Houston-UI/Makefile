@@ -6,7 +6,7 @@ help:
 	@echo " clean   -         Shortcut for git clean -fdX"
 	@echo " build   -         Builds the required containers locally"
 	@echo " run     -         Build and run the app locally"
-	@echo " docker  -        Build and run the app using docker"
+	@echo " docker  -         Build and run the app using docker"
 
 # For local development pipenv
 run:

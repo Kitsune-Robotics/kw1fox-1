@@ -1,7 +1,19 @@
+/* Fonts */
+@font-face {
+  font-family: "overpass-bold";
+  src: url("fonts/overpass-mono-bold.ttf");
+}
+
+@font-face {
+  font-family: "overpass";
+  src: url("fonts/overpass-mono-regular.ttf");
+}
+
 /* Main Body */
 body {
   background-color: rgb(20, 20, 20);
   color: rgb(255, 255, 255);
+  font-family: "overpass";
 }
 
 /* Windows */
@@ -42,6 +54,7 @@ body {
   grid-row: 3;
   font-size: 10vh;
   background: rgb(49, 49, 49);
+  font-family: "overpass-bold";
 }
 
 /* Other stuff */

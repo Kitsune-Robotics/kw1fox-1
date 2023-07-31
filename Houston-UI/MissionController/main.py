@@ -32,7 +32,7 @@ def inject_status():
     missionTime = now - epoch
 
     return {
-        "missionTime": f"T {str(missionTime).split('.')[0]}"
+        "missionTime": f"T+{str(missionTime).split('.')[0]}"
     }  # Clunky but trims off the microseconds
 
 
@@ -55,7 +55,7 @@ def update_load():
     with app.app_context():
         while True:
             time.sleep(0.5)
-            turbo.push(turbo.replace(render_template("loadavg.html"), "load"))
+            # turbo.push(turbo.replace(render_template("loadavg.html"), "load"))
             turbo.push(
                 turbo.replace(render_template("windows/statusbar.html"), "status")
             )
