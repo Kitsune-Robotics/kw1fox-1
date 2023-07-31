@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>KW1FOX-1</title>
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static',filename='placeholder/320x240.png') }}">
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/topbar.css') }}">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+  </script>
+
+  {{ turbo() }}
+</head>
+
+<body>
+  <!-- Top bar navigation -->
+  <div class="topnav">
+    <a class="active" href="/">Controls</a>
+    <a href="/logs">Logs</a>
+    <a href="/images">Images</a>
+  </div>
+
+  {% block content %}{% endblock %}
+</body>
+
+</html>
