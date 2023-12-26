@@ -37,6 +37,12 @@ body {
   background: rgb(49, 49, 49);
 }
 
+#system {
+  grid-column: 3;
+  grid-row: 1;
+  background: rgb(49, 49, 49);
+}
+
 #camera {
   background: rgb(84, 84, 84);
   grid-column: 1;
@@ -45,12 +51,14 @@ body {
 
 #graphs {
   background: rgb(84, 84, 84);
-  grid-column: 2;
+  grid-column-start: 2;
+  grid-column-end: 3;
   grid-row: 2;
 }
 
 #status {
-  grid-column: 1 / span 2;
+  grid-column-start: 1;
+  grid-column-end: 3;
   grid-row: 3;
   font-size: 10vh;
   background: rgb(49, 49, 49);
