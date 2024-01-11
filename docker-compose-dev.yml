@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  MissionController:
+    restart: always
+    build: MissionController
+    image: kw1fox1/missioncontroller:v1
+    networks:
+      - botnet
+
+networks:
+  botnet:
+    driver: bridge
