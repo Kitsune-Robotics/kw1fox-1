@@ -76,7 +76,7 @@ class Streamer:
         ]
 
         print(
-            f"http://{videoHost}:{videoPort}/{self.stream_key}/{self.streamWidth}/{self.streamHeight}/"
+            f"http://{videoHost}:{videoPort}/***/{self.streamWidth}/{self.streamHeight}/"
         )
 
         # This is the ffmpeg pipe streamer!
@@ -232,6 +232,8 @@ NOMETA
 
         # Construct the robot controller, constructing it will autostart its run routine
         # self.controller = rsController(self)
+
+        logging.info("Entering stream loop")
 
         while True:
             if self.redrawFrame:

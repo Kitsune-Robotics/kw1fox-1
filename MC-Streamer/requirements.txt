@@ -3,3 +3,4 @@ pillow
 websockets
 opencv-python
 ffmpeg-python
+ws4py
