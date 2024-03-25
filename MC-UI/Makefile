@@ -15,3 +15,6 @@ help: # List all commands and their descriptions
 
 setup: # Setup your local dev enviroment
 	pipenv install -r requirements.txt
+
+dev: # Runs the UI locally with dev tools enabled
+	pipenv run streamlit run ui.py

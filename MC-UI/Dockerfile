@@ -11,10 +11,6 @@ WORKDIR ${HOME}
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# Install deps
-# RUN apt update \
-#     && apt install -y gcc python3-dev python3-pip ffmpeg
-
 # Python deps
 RUN pip install --upgrade pip
 COPY requirements.txt requirements.txt
@@ -22,6 +18,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 5000
+EXPOSE 8501
 
-ENTRYPOINT ./entrypoint.sh
+HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
+
+ENTRYPOINT ["streamlit", "run", "streamlit_app.py", "--server.port=8501", "--server.address=0.0.0.0"]
