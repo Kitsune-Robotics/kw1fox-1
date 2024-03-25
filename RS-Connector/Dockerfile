@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM python:3.12
 
 # Setup home
 ARG HOME="/app"
@@ -12,8 +12,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Install deps
-RUN apt update \
-    && apt install -y gcc python3-dev python3-pip ffmpeg
+# RUN apt update \
+#     && apt install -y gcc python3-dev python3-pip ffmpeg
 
 # Python deps
 RUN pip install --upgrade pip
