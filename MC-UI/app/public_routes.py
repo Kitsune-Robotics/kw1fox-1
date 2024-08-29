@@ -39,3 +39,23 @@ def fetch_status():
 
     except requests.exceptions.RequestException as e:
         return jsonify({"error": str(e)}), 500
+
+
+@public_bp.route("/task_info/<task_name>")
+def fetch_task_info(task_name):
+    """Fetch task information from MC-Core and return as a simple webpage."""
+    try:
+        # Make a request to the MC-Core task_info endpoint
+        core_response = requests.get(f"http://mc-core:8501/task_info/{task_name}")
+        task_info = core_response.json()
+
+        if "server_error" in task_info:
+            return render_template("error.html", message=task_info["error"])
+
+        # Render a simple webpage with task information
+        return render_template(
+            "task_info.html", task_name=task_name, task_info=task_info
+        )
+
+    except requests.exceptions.RequestException as e:
+        return render_template("error.html", message=str(e)), 500

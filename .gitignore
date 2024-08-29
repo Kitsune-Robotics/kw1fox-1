@@ -17,3 +17,6 @@ __pycache__
 _test
 .pytest_cache
 _build
+
+# Prod
+*prod*

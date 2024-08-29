@@ -12,7 +12,7 @@ from db import init_db
 from healthcheck import health_check
 
 from endpoints.example_endpoint import example_endpoint
-from endpoints.status import status
+from endpoints.task_endpoints import status, task_info
 
 from tasks.task_scheduler import start_scheduled_tasks
 
@@ -26,6 +26,7 @@ async def create_app():
     # Setup routes
     app.router.add_get("/health", health_check)
     app.router.add_get("/status", status)
+    app.router.add_get("/task_info/{task_name}", task_info)
 
     # Start scheduled tasks dynamically
     asyncio.create_task(start_scheduled_tasks())

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Task Info - {{ task_name }}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body>
+    <div id="content">
+        <h1>Task Information: {{ task_name }}</h1>
+        <table>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+            {% for key, value in task_info.public_attributes.items() %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p><strong>Status:</strong> {{ task_info.status }}</p>
+        <p><strong>Error(s):</strong> {{ task_info.error }}</p>
+        <a href="/">Back to Home</a>
+    </div>
+</body>
+
+</html>

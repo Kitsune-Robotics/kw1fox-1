@@ -3,29 +3,36 @@ import importlib
 import os
 import inspect
 import logging
+from datetime import datetime
 
 from .base_task import Task
 
-# Keep track of running tasks
+# Keep track of running tasks and their start times
 running_tasks = {}
+task_errors = {}
 
 
 async def run_task(task_instance):
     """Run a given task instance at its specified interval."""
+    task_name = task_instance.name
     try:
-        logging.info(f"Initializing {task_instance.name}")
+        logging.info(f"Initializing {task_name}")
 
         # Run the init method if it exists
         if hasattr(task_instance, "init"):
             await task_instance.init()
 
+        # Record the task start time
+        task_errors[task_name] = ""
+
         # Loop the run function
         while True:
-            logging.debug(f"Running {task_instance.name}")
+            logging.debug(f"Running {task_name}")
             await task_instance.run()
             await asyncio.sleep(task_instance.interval)
     except Exception as e:
-        logging.error(f"Error in task {task_instance.name}: {e}")
+        logging.error(f"Error in task {task_name}: {e}")
+        task_errors[task_name] = str(e)  # Save the error for this task
 
 
 def load_tasks():

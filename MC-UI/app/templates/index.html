@@ -45,7 +45,7 @@
             let tasksList = document.createElement('ul');
             for (let taskName in status.tasks || status.components) {
                 let taskNode = document.createElement('li');
-                taskNode.innerText = `${taskName}: ${status.tasks ? status.tasks[taskName] : status.components[taskName]}`;
+                taskNode.innerHTML = `<a href="/task_info/${taskName}" target="_blank">${taskName}: ${status.tasks ? status.tasks[taskName] : status.components[taskName]}</a>`; // Stick a href to the task_info api 
                 tasksList.appendChild(taskNode);
             }
 

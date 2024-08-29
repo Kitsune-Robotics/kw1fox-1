@@ -19,4 +19,4 @@ class UpdateWeather(Task):
 
         logging.debug(f"Runs is {self.runs}/0")
         if self.runs < 0:
-            raise IndexError
+            raise IndexError("There was an error!")
