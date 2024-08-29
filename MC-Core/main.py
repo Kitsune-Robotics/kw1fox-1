@@ -8,8 +8,12 @@ from aiohttp import web
 from psycopg2.extras import RealDictCursor
 
 from db import init_db
+
 from healthcheck import health_check
-from endpoints import example_endpoint
+
+from endpoints.example_endpoint import example_endpoint
+from endpoints.status import status
+
 from tasks.task_scheduler import start_scheduled_tasks
 
 
@@ -21,7 +25,7 @@ async def create_app():
 
     # Setup routes
     app.router.add_get("/health", health_check)
-    # app.router.add_get("/example", example_endpoint)
+    app.router.add_get("/status", status)
 
     # Start scheduled tasks dynamically
     asyncio.create_task(start_scheduled_tasks())

@@ -27,12 +27,23 @@ services:
       POSTGRES_DB: MissionControl
       POSTGRES_USER: mcuser
       POSTGRES_PASSWORD: mcpassword
-    depends_on:
-      - db
+    # depends_on:
+    #   db:
+    #     condition: service_healthy
     ports:
       - "8501:8501"
     networks:
       - mc_network
+
+  mc-ui:
+    build: ./MC-UI
+    ports:
+      - "8502:8502"
+    networks:
+      - mc_network
+    depends_on:
+      mc-core:
+        condition: service_started
 
 volumes:
   db_data:
