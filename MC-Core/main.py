@@ -29,6 +29,19 @@ async def create_app():
     return app
 
 
+async def main():
+    # Create and run the web app
+    app = await create_app()
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "0.0.0.0", 8501)
+    await site.start()
+
+    # Run indefinitely, keeping the event loop alive
+    while True:
+        await asyncio.sleep(3600)
+
+
 if __name__ == "__main__":
     # Setup logging
     if True:  # TODO os.getenv here
@@ -46,8 +59,7 @@ if __name__ == "__main__":
         )
         logging.info("Running in prod mode.")
 
-    # Create app
-    app = asyncio.run(create_app())
-
-    # Run app
-    web.run_app(app, host="0.0.0.0", port=8501)
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logging.info("Shutting down.")

@@ -1,21 +1,28 @@
 import asyncio
-import logging
 import importlib
 import os
 import inspect
+import logging
+
 from .base_task import Task
 
 
 async def run_task(task_instance):
     """Run a given task instance at its specified interval."""
+    try:
+        logging.debug(f"Initializing {task_instance.name}")
 
-    # Run the init
-    await task_instance.init()
+        # Run the init method if it exists
+        if hasattr(task_instance, "init"):
+            await task_instance.init()
 
-    # Loop the run function
-    while True:
-        await task_instance.run()
-        await asyncio.sleep(task_instance.interval)
+        # Loop the run function
+        while True:
+            logging.debug(f"Running {task_instance.name}")
+            await task_instance.run()
+            await asyncio.sleep(task_instance.interval)
+    except Exception as e:
+        await logging.error(f"Error in task {task_instance.name}: {e}")
 
 
 def load_tasks():
@@ -34,17 +41,12 @@ def load_tasks():
                 obj = getattr(module, attr)
                 if inspect.isclass(obj) and issubclass(obj, Task) and obj is not Task:
                     tasks.append(obj())
-
-            logging.info(f"Loaded {filename} as a task. Module was {module_name}")
+    logging.debug(f"Loaded tasks: {[task.__class__.__name__ for task in tasks]}")
     return tasks
 
 
 async def start_scheduled_tasks():
     """Start all dynamically loaded scheduled tasks."""
     tasks = load_tasks()
-    for task in tasks:
-        logging.debug(f"Starting {task}")
-    running_tasks = [run_task(task) for task in tasks]
-
+    running_tasks = [asyncio.create_task(run_task(task)) for task in tasks]
     await asyncio.gather(*running_tasks)
-    logging.debug("All tasks Started!")
