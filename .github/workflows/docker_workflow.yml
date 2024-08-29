@@ -25,6 +25,7 @@ jobs:
       matrix:
         container:
           - MC-Core
+          - MC-UI
 
     steps:
       - name: Checkout repository
