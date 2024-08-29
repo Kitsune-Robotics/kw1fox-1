@@ -1,4 +1,0 @@
-# Modules to connect to the remote sink
-load-module module-null-sink sink_name=rtp
-load-module module-rtp-recv sink=rtp
-set-default-source rtp_monitor

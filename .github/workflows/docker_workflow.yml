@@ -24,10 +24,8 @@ jobs:
     strategy:
       matrix:
         container:
-          - Houston-SSTV
-          - Houston-Direwolf
-          - Houston-UI
-          - Houston-Streamer
+          - MC-Core
+          - MC-UI
 
     steps:
       - name: Checkout repository

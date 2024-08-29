@@ -13,6 +13,10 @@ __pycache__
 
 # Dev
 .vscode
+.env
 _test
 .pytest_cache
 _build
+
+# Prod
+*prod*

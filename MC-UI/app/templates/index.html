@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>KW1FOX - Mission Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <div id="sidebar">
+        <h3>System Status</h3>
+        <ul id="status-tree">
+            <!-- Status will be dynamically loaded here -->
+        </ul>
+    </div>
+
+    <div id="main-content">
+        <h1>KW1FOX Mission Controller Public Interface</h1>
+        <nav>
+            <a href="/">Home</a> |
+            <a href="/map">Live Map</a>
+        </nav>
+        <p>Much to do! So much of it!</p>
+    </div>
+
+    <script>
+        async function fetchStatus() {
+            try {
+                let response = await fetch('/status');
+                let data = await response.json();
+
+                displayStatus('MC-Core', data['MC-Core'], true);
+                displayStatus('MC-UI', data['MC-UI']);
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
+        }
+
+        function displayStatus(serviceName, status, browsable = false) {
+            let tree = document.getElementById('status-tree');
+            let serviceNode = document.createElement('li');
+            serviceNode.innerText = `${serviceName}: ${status.status}`;
+
+            let tasksList = document.createElement('ul');
+            for (let taskName in status.tasks || status.components) {
+                let taskNode = document.createElement('li');
+                if (browsable) {
+                    taskNode.innerHTML = `<a href="/task_info/${taskName}" target="_blank">${taskName}: ${status.tasks ? status.tasks[taskName] : status.components[taskName]}</a>`; // Stick a href to the task_info api 
+                } else {
+                    taskNode.innerHTML = `${taskName}: ${status.tasks ? status.tasks[taskName] : status.components[taskName]}`;
+                }
+                tasksList.appendChild(taskNode);
+            }
+
+            serviceNode.appendChild(tasksList);
+            tree.appendChild(serviceNode);
+        }
+
+        // Fetch the status when the page loads
+        document.addEventListener('DOMContentLoaded', fetchStatus);
+    </script>
+</body>
+
+</html>
