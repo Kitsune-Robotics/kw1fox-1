@@ -1,0 +1,81 @@
+/* General styles for the entire page */
+body {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f0f0f0; /* Light gray background */
+  color: #000; /* Black text */
+  margin: 0;
+  padding: 0;
+  display: flex; /* Flexbox to create sidebar layout */
+}
+
+/* Sidebar styling */
+#sidebar {
+  width: 200px; /* Fixed width for sidebar */
+  background-color: #ddd; /* Slightly darker gray */
+  padding: 15px; /* Padding inside the sidebar */
+  border-right: 2px solid #bbb; /* Border to separate sidebar from main content */
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box; /* Include padding in width and height calculations */
+  position: fixed; /* Fixed positioning to keep it in place */
+  top: 0;
+  left: 0;
+  overflow-y: auto; /* Scroll if content overflows */
+}
+
+/* Main content styling */
+#main-content {
+  margin-left: 220px; /* Space for sidebar */
+  padding: 20px; /* Padding for main content */
+  flex-grow: 1; /* Allow main content to grow */
+  max-width: calc(100% - 220px); /* Avoid overflow from main content */
+  background-color: #f5f5dc; /* Beige background color for a vintage look */
+}
+
+/* Heading styles */
+h1 {
+  color: #006400; /* Dark green color */
+  font-size: 24px;
+}
+
+/* Navigation styling */
+nav {
+  background-color: #eee; /* Light gray background */
+  padding: 10px; /* Padding inside navigation */
+  border-bottom: 2px solid #ccc; /* Bottom border for separation */
+  margin-bottom: 20px; /* Space below navigation */
+}
+
+nav a {
+  color: #000; /* Black links */
+  text-decoration: none; /* Remove underline */
+  font-weight: bold; /* Bold links */
+}
+
+nav a:hover {
+  text-decoration: underline; /* Underline on hover for vintage feel */
+}
+
+/* Paragraph styling */
+p {
+  line-height: 1.6; /* Increased line height for readability */
+  font-size: 14px; /* Smaller font size for vintage look */
+}
+
+/* Link styling */
+a {
+  color: #0000ee; /* Default link blue color */
+}
+
+a:hover {
+  color: #551a8b; /* Purple color on hover */
+}
+
+/* List styling */
+ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove default padding */
+}
+
+li {
+  margin-bottom: 10px; /* Space between list items */
+}

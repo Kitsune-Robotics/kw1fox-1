@@ -13,3 +13,7 @@ def create_app():
     app.register_blueprint(admin_bp)
 
     return app
+
+
+# Create an app instance here for Gunicorn to use
+app = create_app()

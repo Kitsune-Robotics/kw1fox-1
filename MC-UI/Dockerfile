@@ -32,7 +32,7 @@ COPY . .
 EXPOSE 8502
 
 # Healthcheck the server with a quick curl command
-# HEALTHCHECK CMD curl --fail http://localhost:8501/health || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:8501/health || exit 1
 
 # Entrypoint to activate the virtual environment and run the application
-CMD ["/bin/bash", "-c", ". venv/bin/activate && python -m app"]
+CMD ["/bin/bash", "-c", ". venv/bin/activate && gunicorn -w 4 -b 0.0.0.0:8502 app:app"]

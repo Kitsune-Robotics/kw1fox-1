@@ -10,6 +10,11 @@ def index():
     return render_template("index.html")
 
 
+@public_bp.route("/health")
+def health():
+    return jsonify({"health": "healthy"})
+
+
 @public_bp.route("/map")
 def live_map():
     # Logic for rendering live map
