@@ -6,11 +6,14 @@ import logging
 
 from .base_task import Task
 
+# Keep track of running tasks
+running_tasks = {}
+
 
 async def run_task(task_instance):
     """Run a given task instance at its specified interval."""
     try:
-        logging.debug(f"Initializing {task_instance.name}")
+        logging.info(f"Initializing {task_instance.name}")
 
         # Run the init method if it exists
         if hasattr(task_instance, "init"):
@@ -22,7 +25,7 @@ async def run_task(task_instance):
             await task_instance.run()
             await asyncio.sleep(task_instance.interval)
     except Exception as e:
-        await logging.error(f"Error in task {task_instance.name}: {e}")
+        logging.error(f"Error in task {task_instance.name}: {e}")
 
 
 def load_tasks():
@@ -47,6 +50,11 @@ def load_tasks():
 
 async def start_scheduled_tasks():
     """Start all dynamically loaded scheduled tasks."""
+    logging.debug("Loading tasks...")
     tasks = load_tasks()
-    running_tasks = [asyncio.create_task(run_task(task)) for task in tasks]
-    await asyncio.gather(*running_tasks)
+
+    for task in tasks:
+        # Create and start tasks while tracking them
+        running_task = asyncio.create_task(run_task(task))
+        running_tasks[task.name] = running_task
+    await asyncio.gather(*running_tasks.values())

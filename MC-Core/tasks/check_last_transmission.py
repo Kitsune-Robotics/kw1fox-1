@@ -4,7 +4,7 @@ from .base_task import Task
 
 
 class CheckLastTransmission(Task):
-    interval = 60  # Interval in seconds
+    interval = 20  # Interval in seconds
 
     async def init(self):
         logging.info("Ready to check last transmission")
