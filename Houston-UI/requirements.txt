@@ -1,3 +1,0 @@
-flask
-turbo-flask
-gunicorn

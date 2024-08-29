@@ -1,13 +1,42 @@
-version: '3.8'
+# Development docker compose file, only to be used to build and run the images for testing.
 
 services:
-  MissionController:
-    restart: always
-    build: MissionController
-    image: kw1fox1/missioncontroller:v1
+  db:
+    restart: no
+    image: postgres:13
+    environment:
+      POSTGRES_DB: MissionControl
+      POSTGRES_USER: mcuser
+      POSTGRES_PASSWORD: mcpassword
+    volumes:
+      - db_data:/var/lib/postgresql/data
     networks:
-      - botnet
+      - mc_network
+    healthcheck:
+      # Important! So containers that `depends_on` can wait
+      test: pg_isready -U mcuser -d MissionControl
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  mc-core:
+    restart: no
+    build: ./MC-Core
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_DB: MissionControl
+      POSTGRES_USER: mcuser
+      POSTGRES_PASSWORD: mcpassword
+    depends_on:
+      - db
+    ports:
+      - "8501:8501"
+    networks:
+      - mc_network
+
+volumes:
+  db_data:
 
 networks:
-  botnet:
+  mc_network:
     driver: bridge
